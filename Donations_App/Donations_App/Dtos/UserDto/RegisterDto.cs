@@ -18,9 +18,6 @@ namespace Donations_App.Models
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
-        //[JsonConverter(typeof(StringEnumConverter))]
-        public Gender Gender { get; set; }
         public string PhoneNumber { get; set; }
 
         [Required, StringLength(100)]
