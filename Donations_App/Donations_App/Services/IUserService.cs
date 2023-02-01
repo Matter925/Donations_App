@@ -11,6 +11,8 @@ namespace Donations_App.Services
         Task<UpdateProfileDto> GetProfileData(string email);
         Task<AuthModel> UpdateProfile(string email, UpdateProfileDto upProfile);
         Task<GetUserDto> GetUser(string email);
+        Task<AuthModel> ForgotPasswordAsync(string email);
+        Task<bool> VerifyCodeAsync(VerifyCodeDto codeDto);
         Task<AuthModel> ChangePassword(string email ,ChangePasswordDto model);
         Task<string> AssignRole(AssignRoleDto assignRole);
         Task<AuthModel> RefreshTokenAsync(string token);

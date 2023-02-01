@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Donations_App.Models;
+using DonationsApp.Models;
 
 namespace Donations_App.Data
 {
@@ -12,6 +13,6 @@ namespace Donations_App.Data
 
         }
 
-        
+        public DbSet<VerifyCode> VerifyCodes { get; set; }
     }
 }

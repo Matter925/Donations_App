@@ -16,6 +16,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Donations_App.Data;
 using Donations_App.Dtos.UserDto;
+using DonationsApp.Models;
 
 namespace Donations_App.Services
 {
@@ -27,13 +28,15 @@ namespace Donations_App.Services
         private readonly JWT _jwt;
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
-        public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<JWT> jwt, IConfiguration configuration , ApplicationDbContext context)
+        private readonly IMailingService _mailingService;
+        public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<JWT> jwt, IConfiguration configuration , ApplicationDbContext context , IMailingService mailingService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _jwt = jwt.Value;
             _configuration = configuration;
             _context = context;
+            _mailingService = mailingService;
         }
 
         public async Task<string> AssignRole(AssignRoleDto assignRole)
@@ -383,6 +386,51 @@ namespace Donations_App.Services
             };
 
 
+        }
+
+        public async Task<AuthModel> ForgotPasswordAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return new AuthModel
+            {
+                Message = "Email is incorrect or not found !!",
+                IsAuthenticated = false,
+            };
+
+
+            Random rnd = new Random();
+            var randomNum = (rnd.Next(100000, 999999)).ToString();
+            string message = "Hi " + user.FirstName + " your verify code is " + randomNum;
+            await _mailingService.SendEmailAsync(user.Email, "Verify Email", message, null);
+            var Vcode = new VerifyCode
+            {
+                Code = randomNum,
+                UserId = user.Id,
+            };
+            await _context.VerifyCodes.AddAsync(Vcode);
+            _context.SaveChanges();
+            return new AuthModel
+            {
+                IsAuthenticated = true,
+                Message = "Verify code sent to the email successfully !!",
+            };
+        }
+
+        public async Task<bool> VerifyCodeAsync(VerifyCodeDto codeDto)
+        {
+            var user = await _userManager.FindByEmailAsync(codeDto.email);
+            if (user == null)
+            {
+                return false;
+            };
+            var result = await _context.VerifyCodes.SingleOrDefaultAsync(r => r.UserId == user.Id);
+            if (result.Code == codeDto.Code)
+            {
+                _context.VerifyCodes.Remove(result);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
     }
 }

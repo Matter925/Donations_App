@@ -4,6 +4,7 @@ using Donations_App.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DonationsApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230201170708_AddVerifyCode")]
+    partial class AddVerifyCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +45,7 @@ namespace DonationsApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("VerifyCodes", (string)null);
+                    b.ToTable("VerifyCodes");
                 });
 
             modelBuilder.Entity("Donations_App.Models.ApplicationUser", b =>
@@ -270,7 +273,7 @@ namespace DonationsApp.Migrations
 
             modelBuilder.Entity("Donations_App.Models.ApplicationUser", b =>
                 {
-                    b.OwnsMany("Donations_App.Models.ApplicationUser.RefreshTokens#Donations_App.Models.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("Donations_App.Models.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("ApplicationUserId")
                                 .HasColumnType("nvarchar(450)");
@@ -296,7 +299,7 @@ namespace DonationsApp.Migrations
 
                             b1.HasKey("ApplicationUserId", "Id");
 
-                            b1.ToTable("RefreshToken", (string)null);
+                            b1.ToTable("RefreshToken");
 
                             b1.WithOwner()
                                 .HasForeignKey("ApplicationUserId");

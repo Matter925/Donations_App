@@ -1,6 +1,7 @@
 using Donations_App.Data;
 using Donations_App.Models;
 using Donations_App.Services;
+using Donations_App.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMailingService, MailingService>();
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));

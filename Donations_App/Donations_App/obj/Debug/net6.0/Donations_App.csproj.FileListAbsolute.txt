@@ -90,3 +90,5 @@ E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Debug\net6.0\ref\Donations
 E:\Level 4\GP\Project\Donations_App\Donations_App\bin\Debug\net6.0\BouncyCastle.Crypto.dll
 E:\Level 4\GP\Project\Donations_App\Donations_App\bin\Debug\net6.0\Newtonsoft.Json.dll
 E:\Level 4\GP\Project\Donations_App\Donations_App\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
+E:\Level 4\GP\Project\Donations_App\Donations_App\bin\Debug\net6.0\MailKit.dll
+E:\Level 4\GP\Project\Donations_App\Donations_App\bin\Debug\net6.0\MimeKit.dll
