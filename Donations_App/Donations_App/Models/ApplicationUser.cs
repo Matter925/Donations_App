@@ -13,7 +13,7 @@ namespace Donations_App.Models
 
         [Required]
         public string Address { get; set; }
-
+        
         public List<RefreshToken>? RefreshTokens { get; set; }
 
 
