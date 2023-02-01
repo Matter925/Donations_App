@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Donations_App.props" />
+</Project>
