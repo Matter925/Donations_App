@@ -12,10 +12,8 @@ namespace Donations_App.Models
         public string LastName { get; set; }
 
         [Required]
-        public string Address { get; set; }/// <summary>
-        /// //
-        /// </summary>
-
+        public string Address { get; set; }
+        
         public List<RefreshToken>? RefreshTokens { get; set; }
 
 
