@@ -19,6 +19,12 @@ namespace Donations_App.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpGet("GetRoles")]
+        public async Task<IActionResult> GetRoles()
+        {
+            var result = await _userService.getRoles();
+            return Ok(result);
+        }
         [HttpPost("AssignRole")]
         public async Task<IActionResult> AssignRole(AssignRoleDto assignRole)
         {
@@ -35,24 +41,18 @@ namespace Donations_App.Controllers
 
         }
 
-        //[HttpPost("CreateRole")]
-        //public async Task<IActionResult> CreateRole(CreateRoleDto createRole)
-        //{
+        [HttpPost("CreateRole")]
+        public async Task<IActionResult> CreateRole(CreateRoleDto createRole)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        //    var result = await _roleManager.CreateAsync(new IdentityRole
-        //    {
+            var result = await _userService.CreateRole(createRole);
 
-        //        Name = createRole.RoleName
-        //    });
+            if (result)
+                return Ok("Successfully");
 
-        //    if (result.Succeeded)
-        //    {
-        //        return Ok("New Role Created");
-        //    }
-        //    else
-        //    {
-        //        return BadRequest(result.Errors);
-        //    }
-        //}
+            return BadRequest("The Role already exist !!");
+        }
     }
 }

@@ -8,9 +8,7 @@ namespace Donations_App.Models
     public class RegisterDto
     {
         [Required , StringLength(100)]
-        public string FirstName { get; set; }
-        [Required, StringLength(100)]
-        public string LastName { get; set; }
+        public string FullName { get; set; }
 
         [Required, StringLength(100)]
         public string Username { get; set; }

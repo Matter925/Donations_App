@@ -64,13 +64,13 @@ namespace Donations_App.Services
             }
             var jwtSecurityToken = await CreateJwtToken(user);
             var rolesList = await _userManager.GetRolesAsync(user);
-            //var CartUser = await _context.Carts.SingleOrDefaultAsync(c => c.UserId == user.Id);
+            var CartUser = await _context.Carts.SingleOrDefaultAsync(c => c.UserId == user.Id);
             authModel.Message = "User Login successfully ";
             authModel.IsAuthenticated = true;
             authModel.Id = user.Id;
-            authModel.FirstName = user.FirstName;
-             authModel. LastName = user.LastName ;  
-            //authModel.CartId = user.Cart.Id;
+            authModel.FullName = user.FullName;
+             
+            authModel.CartId = user.Cart.Id;
             authModel.Email = user.Email;
             authModel.Username = user.UserName;
             authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
@@ -104,8 +104,7 @@ namespace Donations_App.Services
             var user = new ApplicationUser
             {
                 Email = register.Email,
-                FirstName = register.FirstName,
-                LastName = register.LastName,
+                FullName = register.FullName,
                 UserName = register.Username,
                 Address = register.Address,
                 PhoneNumber = register.PhoneNumber,
@@ -128,24 +127,21 @@ namespace Donations_App.Services
             var refreshToken = GenerateRefreshToken();
             user.RefreshTokens.Add(refreshToken);
             await _userManager.UpdateAsync(user);
-            //var addCart = new Cart
-            //{
-            //    UserId = user.Id,
+            var addCart = new Cart
+            {
+                UserId = user.Id,
 
-            //};
-            //await _context.Carts.AddAsync(addCart);
-            //_context.SaveChanges();
-
-            
+            };
+            await _context.Carts.AddAsync(addCart);
+            _context.SaveChanges();
             return new AuthModel
             {
                 Message = "User Registered successfully ",
                 Id = user.Id,
                 Email = user.Email,
-               FirstName = user.FirstName,
-               LastName = user.LastName,    
+               FullName = user.FullName,   
                 Username = user.UserName,
-                //CartId = user.Cart.Id,
+                CartId = user.Cart.Id,
                 ExpireOn = jwtSecurityToken.ValidTo,
                 IsAuthenticated = true,
                 Roles = new List<string> { "User" },
@@ -291,8 +287,7 @@ namespace Donations_App.Services
             await _userManager.UpdateAsync(user);
             authModel.Message = "Password  Successfully Changed";
             authModel.Id = user.Id;
-            authModel.FirstName = user.FirstName;
-            authModel.LastName = user.LastName; 
+            authModel.FullName = user.FullName; 
             authModel.Email = user.Email;
             authModel.Username = user.UserName;
             authModel.IsAuthenticated = true;
@@ -315,8 +310,7 @@ namespace Donations_App.Services
             }
             return new UpdateProfileDto
             {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                FullName = user.FullName,
                 PhoneNumber = user.PhoneNumber,
                 Address = user.Address,
             };
@@ -328,8 +322,7 @@ namespace Donations_App.Services
             var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
             {
-                user.FirstName = upProfile.FirstName;
-                user.LastName = upProfile.LastName;
+                user.FullName = upProfile.FullName;
                 user.PhoneNumber = upProfile.PhoneNumber;
                 user.Address = upProfile.Address;
                 var result = await _userManager.UpdateAsync(user);
@@ -350,8 +343,7 @@ namespace Donations_App.Services
                 await _userManager.UpdateAsync(user);
                 authModel.Message = "Profile Updated  Successfully ";
                 authModel.Id = user.Id;
-                authModel.FirstName = user.FirstName;
-                authModel.LastName = user.LastName;
+                authModel.FullName = user.FullName;
                 authModel.Email = user.Email;
                 authModel.Username = user.UserName;
                 authModel.IsAuthenticated = true;
@@ -378,8 +370,7 @@ namespace Donations_App.Services
                 isNotNull = true,
                 Id = user.Id,
                 Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                FullName = user.FullName,
                 Username = user.UserName,
                 PhoneNumber = user.PhoneNumber,
                 Address = user.Address,
@@ -400,7 +391,7 @@ namespace Donations_App.Services
 
             Random rnd = new Random();
             var randomNum = (rnd.Next(100000, 999999)).ToString();
-            string message = "Hi " + user.FirstName + " your verify code is " + randomNum;
+            string message = "Hi " + user.UserName+ " your verify code is " + randomNum;
             await _mailingService.SendEmailAsync(user.Email, "Verify Email", message, null);
             var Vcode = new VerifyCode
             {
@@ -431,6 +422,31 @@ namespace Donations_App.Services
                 return true;
             }
             return false;
+        }
+
+        public async Task<bool> CreateRole(CreateRoleDto createRole)
+        {
+            if(await _roleManager.RoleExistsAsync(createRole.RoleName))
+            {
+                return false;
+            }
+            var result = await _roleManager.CreateAsync(new IdentityRole
+           {
+
+                  Name = createRole.RoleName
+            });
+            if (result.Succeeded)
+            {
+                return true;
+            }
+            return false;
+
+        }
+
+        public async Task<List<IdentityRole>> getRoles()
+        {
+            var result = await _roleManager.Roles.ToListAsync();
+            return result;
         }
     }
 }
