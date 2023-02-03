@@ -1,4 +1,5 @@
 using Donations_App.Data;
+using Donations_App.Services.CategoryServices;
 using Donations_App.Models;
 using Donations_App.Services;
 using Donations_App.Settings;
@@ -18,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMailingService, MailingService>();
+builder.Services.AddScoped<ICategoryServices, CategoryServices>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

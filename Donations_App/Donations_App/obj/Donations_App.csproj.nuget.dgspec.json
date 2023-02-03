@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\Donations_App.csproj": {}
+    "D:\\GP_Project\\Donations_App\\Donations_App\\Donations_App\\Donations_App.csproj": {}
   },
   "projects": {
-    "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\Donations_App.csproj": {
+    "D:\\GP_Project\\Donations_App\\Donations_App\\Donations_App\\Donations_App.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\Donations_App.csproj",
+        "projectUniqueName": "D:\\GP_Project\\Donations_App\\Donations_App\\Donations_App\\Donations_App.csproj",
         "projectName": "Donations_App",
-        "projectPath": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\Donations_App.csproj",
-        "packagesPath": "C:\\Users\\MATTER\\.nuget\\packages\\",
-        "outputPath": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\obj\\",
+        "projectPath": "D:\\GP_Project\\Donations_App\\Donations_App\\Donations_App\\Donations_App.csproj",
+        "packagesPath": "C:\\Users\\Yousef\\.nuget\\packages\\",
+        "outputPath": "D:\\GP_Project\\Donations_App\\Donations_App\\Donations_App\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\MATTER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Yousef\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -123,7 +123,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }

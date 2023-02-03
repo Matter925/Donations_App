@@ -14,5 +14,6 @@ namespace Donations_App.Data
         }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<VerifyCode> VerifyCodes { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
 }
