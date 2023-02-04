@@ -70,7 +70,7 @@ namespace Donations_App.Services
             authModel.Id = user.Id;
             authModel.FullName = user.FullName;
              
-            authModel.CartId = user.Cart.Id;
+            authModel.CartId = CartUser.Id;
             authModel.Email = user.Email;
             authModel.Username = user.UserName;
             authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
