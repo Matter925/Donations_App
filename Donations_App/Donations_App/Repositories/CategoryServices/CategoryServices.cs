@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Donations_App.Dtos.CategoryDtos;
 using Donations_App.Data;
 
-namespace Donations_App.Services.CategoryServices
+namespace Donations_App.Repositories.CategoryServices
 {
     public class CategoryServices : ICategoryServices
     {
@@ -25,15 +25,18 @@ namespace Donations_App.Services.CategoryServices
                 };
                 await _context.Categories.AddAsync(cat);
                 _context.SaveChanges();
-                return category;
+                return cat;
             }
-
             return null;
         }
 
         public async Task<Category> DeleteCategory(int id)
         {
             var categoty = await _context.Categories.FindAsync(id);
+            if(categoty == null)
+            {
+                return null;
+            }
             _context.Remove(categoty);
             _context.SaveChanges();
             return categoty;
@@ -49,12 +52,20 @@ namespace Donations_App.Services.CategoryServices
             return await _context.Categories.FindAsync(id);
         }
 
-        public async Task<Category> UpdateCategory(Category category)
+        public async Task<Category> UpdateCategory(CategoryDto dto , int id)
         {
-            _context.Categories.Update(category);
-            _context.SaveChanges();
+            
+            var catategory= await _context.Categories.FindAsync(id);
+            if(catategory == null)
+            {
+                return null;
+            }
+            catategory.Name = dto.Name;
+             catategory.Description = dto.Description;
+             _context.Categories.Update(catategory);
+              _context.SaveChanges(true);
 
-            return category;
+            return catategory;
         }
     }
 }

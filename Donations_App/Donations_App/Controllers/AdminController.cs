@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Donations_App.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class AdminController : ControllerBase
     {
@@ -18,7 +19,7 @@ namespace Donations_App.Controllers
             _userService = userService;
         }
 
-        [Authorize(Roles = "Admin")]
+        
         [HttpGet("GetRoles")]
         public async Task<IActionResult> GetRoles()
         {

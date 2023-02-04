@@ -1,5 +1,5 @@
 using Donations_App.Data;
-using Donations_App.Services.CategoryServices;
+using Donations_App.Repositories.CategoryServices;
 using Donations_App.Models;
 using Donations_App.Services;
 using Donations_App.Settings;
@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using Donations_App.Repositories.PatientCaseServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFramework
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMailingService, MailingService>();
 builder.Services.AddScoped<ICategoryServices, CategoryServices>();
+builder.Services.AddScoped<IPatientCaseRepository, PatientCaseRepository>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
