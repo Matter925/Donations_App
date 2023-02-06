@@ -34,10 +34,10 @@ namespace Donations_App.Controllers
 
             var result = await _userService.AssignRole(assignRole);
 
-            if (!string.IsNullOrEmpty(result))
-                return BadRequest(result);
+            if (result.Success)
+                return Ok(result);
 
-            return Ok(assignRole);
+            return BadRequest(result);
 
 
         }
@@ -50,10 +50,10 @@ namespace Donations_App.Controllers
 
             var result = await _userService.CreateRole(createRole);
 
-            if (result)
-                return Ok("Successfully");
+            if (result.Success)
+                return Ok(result);
 
-            return BadRequest("The Role already exist !!");
+            return BadRequest(result);
         }
     }
 }

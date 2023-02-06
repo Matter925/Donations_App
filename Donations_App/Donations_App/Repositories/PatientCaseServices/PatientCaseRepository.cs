@@ -74,7 +74,7 @@ namespace Donations_App.Repositories.PatientCaseServices
 
         public async Task<PatientCase> UpdatePatientCase(int id,PatientCaseDto dto)
         {
-            var paient = await _context.PatientsCases.FindAsync(id);
+            var paient = await _context.PatientsCases.Include(c=> c.Category).SingleOrDefaultAsync(p=>p.Id == id);
             if (paient == null)
             {
                 return null;

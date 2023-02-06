@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Donations_App.Data;
 using Donations_App.Dtos.UserDto;
 using DonationsApp.Models;
+using Donations_App.Dtos.ReturnDto;
 
 namespace Donations_App.Services
 {
@@ -39,18 +40,7 @@ namespace Donations_App.Services
             _mailingService = mailingService;
         }
 
-        public async Task<string> AssignRole(AssignRoleDto assignRole)
-        {
-            var userDatails = await _userManager.FindByEmailAsync(assignRole.Email);
-            if (userDatails is null || !await _roleManager.RoleExistsAsync(assignRole.RoleName))
-                return "Invalid user Email or Role";
-            
-            if (await _userManager.IsInRoleAsync(userDatails, assignRole.RoleName))
-                return "User already assigned to this role ";
-            var result = await _userManager.AddToRoleAsync(userDatails, assignRole.RoleName);
-            return result.Succeeded ? string.Empty : "Sonething went wrong";
-
-        }
+        
 
         public async Task<AuthModel> LoginAsync(LoginDto login)
         {
@@ -130,10 +120,18 @@ namespace Donations_App.Services
             var addCart = new Cart
             {
                 UserId = user.Id,
-
             };
             await _context.Carts.AddAsync(addCart);
             _context.SaveChanges();
+
+            var filePath = $"{Directory.GetCurrentDirectory()}\\Templates\\EmailTemplate.html";
+            var str = new StreamReader(filePath);
+            var mailText = str.ReadToEnd();
+            str.Close();
+            mailText = mailText.Replace("[username]", user.FullName).Replace("[email]", user.Email);
+            await _mailingService.SendEmailAsync(user.Email, "Welcome to our website ", mailText);
+
+
             return new AuthModel
             {
                 Message = "User Registered successfully ",
@@ -153,113 +151,10 @@ namespace Donations_App.Services
         }
 
 
-        private async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)
-        {
-            var userClaims = await _userManager.GetClaimsAsync(user);
-            var roles = await _userManager.GetRolesAsync(user);
-            var roleClaims = new List<Claim>();
-
-            foreach (var role in roles)
-                roleClaims.Add(new Claim("roles", role));
-
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("uid", user.Id)
-            }
-            .Union(userClaims)
-            .Union(roleClaims);
-
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
-            var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
-            var jwtSecurityToken = new JwtSecurityToken(
-                issuer: _configuration["JWT:Issuer"],
-                audience: _configuration["JWT:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddDays(10),
-                signingCredentials: signingCredentials);
-
-            return jwtSecurityToken;
-        }
 
 
-        private RefreshToken GenerateRefreshToken()
-        {
-            var randomNumber = new byte[32];
-
-            using var generator = new RNGCryptoServiceProvider();
-
-            generator.GetBytes(randomNumber);
-
-            return new RefreshToken
-            {
-                Token = Convert.ToBase64String(randomNumber),
-                ExpiresOn = DateTime.UtcNow.AddDays(10),
-                CreatedOn = DateTime.UtcNow
-            };
-        }
-
-        public async Task<AuthModel> RefreshTokenAsync(string token)
-        {
-            var authModel = new AuthModel();
-
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
-
-            if (user == null)
-            {
-                authModel.Message = "Invalid token";
-                return authModel;
-            }
-
-            var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
-
-            if (!refreshToken.IsActive)
-            {
-                authModel.Message = "Inactive token";
-                return authModel;
-            }
-
-            refreshToken.RevokedOn = DateTime.UtcNow;
-
-            var newRefreshToken = GenerateRefreshToken();
-            user.RefreshTokens.Add(newRefreshToken);
-            await _userManager.UpdateAsync(user);
-
-            var jwtToken = await CreateJwtToken(user);
-            authModel.IsAuthenticated = true;
-            authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-            authModel.Email = user.Email;
-            authModel.Username = user.UserName;
-            var roles = await _userManager.GetRolesAsync(user);
-            authModel.Roles = roles.ToList();
-            authModel.RefreshToken = newRefreshToken.Token;
-            authModel.RefreshTokenExpiration = newRefreshToken.ExpiresOn;
-
-            return authModel;
-        }
-
-        public async Task<bool> RevokeTokenAsync(string token)
-        {
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
-
-            if (user == null)
-                return false;
-
-            var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
-
-            if (!refreshToken.IsActive)
-                return false;
-
-            refreshToken.RevokedOn = DateTime.UtcNow;
-
-            await _userManager.UpdateAsync(user);
-
-            return true;
-        }
-
+        // Profile Settings -----------------------------------------------------------------------------------------------------------
+        
         public async Task<AuthModel> ChangePassword(string email ,ChangePasswordDto model)
         {
             var authModel = new AuthModel();
@@ -379,13 +274,13 @@ namespace Donations_App.Services
 
         }
 
-        public async Task<AuthModel> ForgotPasswordAsync(string email)
+        public async Task<RetRestPassDto> ForgotPasswordAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            if (user == null) return new AuthModel
+            if (user == null) return new RetRestPassDto
             {
+                Success = false,
                 Message = "Email is incorrect or not found !!",
-                IsAuthenticated = false,
             };
 
 
@@ -400,35 +295,79 @@ namespace Donations_App.Services
             };
             await _context.VerifyCodes.AddAsync(Vcode);
             _context.SaveChanges();
-            return new AuthModel
+            return new RetRestPassDto
             {
-                IsAuthenticated = true,
+                Success = true,
                 Message = "Verify code sent to the email successfully !!",
             };
         }
 
-        public async Task<bool> VerifyCodeAsync(VerifyCodeDto codeDto)
+        public async Task<RetRestPassDto> CreateNewPassword(string email, CreatePasswordDto model)
+        {
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if(user != null)
+            {
+                var res =await _userManager.ResetPasswordAsync(user , model.RestToken ,model.NewPassword);
+                if(res.Succeeded)
+                {
+                    return new RetRestPassDto
+                    {
+                        Success = true,
+                        Message="Successfully Changed "
+                    };
+                }
+                return new RetRestPassDto
+                {
+                    Success = false,
+                    Message = "Error of change password"
+                };
+
+            }
+            return new RetRestPassDto
+            {
+                Success = false,
+                Message = "User is not found !!"
+            };
+
+
+        }
+
+        public async Task<ReturnRestToken> VerifyCodeAsync(VerifyCodeDto codeDto)
         {
             var user = await _userManager.FindByEmailAsync(codeDto.email);
             if (user == null)
             {
-                return false;
+                return new ReturnRestToken { Success= false};
             };
             var result = await _context.VerifyCodes.SingleOrDefaultAsync(r => r.UserId == user.Id);
             if (result.Code == codeDto.Code)
             {
                 _context.VerifyCodes.Remove(result);
                 _context.SaveChanges();
-                return true;
+
+                var restToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+                return new ReturnRestToken
+                {
+                    Success = true ,
+                    RestToken = restToken
+                };
             }
-            return false;
+            return new ReturnRestToken { Success = false};
         }
 
-        public async Task<bool> CreateRole(CreateRoleDto createRole)
+
+        // Admin Methods -------------------------------------------------------------------------------------------------------------
+
+
+        public async Task<AdminDto> CreateRole(CreateRoleDto createRole)
         {
             if(await _roleManager.RoleExistsAsync(createRole.RoleName))
             {
-                return false;
+                return new AdminDto{
+                    Success = false ,
+                    Message = "The Role already exist !!"
+                };
             }
             var result = await _roleManager.CreateAsync(new IdentityRole
            {
@@ -437,9 +376,52 @@ namespace Donations_App.Services
             });
             if (result.Succeeded)
             {
-                return true;
+                return new AdminDto
+                {
+                    Success = true,
+                    Message = "Successfully"
+                };
             }
-            return false;
+            return new AdminDto
+            {
+                Success = false,
+                Message = "Sonething went wrong"
+            };
+
+        }
+
+        public async Task<AdminDto> AssignRole(AssignRoleDto assignRole)
+        {
+            var userDatails = await _userManager.FindByEmailAsync(assignRole.Email);
+            if (userDatails is null || !await _roleManager.RoleExistsAsync(assignRole.RoleName))
+            {
+                return new AdminDto
+                {
+                    Success = false,
+                    Message = "Invalid user Email or Role"
+                };
+            }
+
+            if (await _userManager.IsInRoleAsync(userDatails, assignRole.RoleName))
+                return new AdminDto
+                {
+                    Success = false,
+                    Message = "User already assigned to this role",
+                };
+            var result = await _userManager.AddToRoleAsync(userDatails, assignRole.RoleName);
+            if (result.Succeeded)
+            {
+                return new AdminDto
+                {
+                    Success = true,
+                    Message = "Successfully Assigned",
+                };
+            }
+            return new AdminDto
+            {
+                Success = false,
+                Message = "Sonething went wrong",
+            };
 
         }
 
@@ -448,5 +430,114 @@ namespace Donations_App.Services
             var result = await _roleManager.Roles.ToListAsync();
             return result;
         }
+
+
+        // Methods Of Create Tokens-------------------------------------------------------------------------------------------------------
+        private async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)
+        {
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            var roleClaims = new List<Claim>();
+
+            foreach (var role in roles)
+                roleClaims.Add(new Claim("roles", role));
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("uid", user.Id)
+            }
+            .Union(userClaims)
+            .Union(roleClaims);
+
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
+            var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+
+            var jwtSecurityToken = new JwtSecurityToken(
+                issuer: _configuration["JWT:Issuer"],
+                audience: _configuration["JWT:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddDays(10),
+                signingCredentials: signingCredentials);
+
+            return jwtSecurityToken;
+        }
+
+        private RefreshToken GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+
+            using var generator = new RNGCryptoServiceProvider();
+
+            generator.GetBytes(randomNumber);
+
+            return new RefreshToken
+            {
+                Token = Convert.ToBase64String(randomNumber),
+                ExpiresOn = DateTime.UtcNow.AddDays(10),
+                CreatedOn = DateTime.UtcNow
+            };
+        }
+
+        public async Task<AuthModel> RefreshTokenAsync(string token)
+        {
+            var authModel = new AuthModel();
+
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
+
+            if (user == null)
+            {
+                authModel.Message = "Invalid token";
+                return authModel;
+            }
+
+            var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
+
+            if (!refreshToken.IsActive)
+            {
+                authModel.Message = "Inactive token";
+                return authModel;
+            }
+
+            refreshToken.RevokedOn = DateTime.UtcNow;
+
+            var newRefreshToken = GenerateRefreshToken();
+            user.RefreshTokens.Add(newRefreshToken);
+            await _userManager.UpdateAsync(user);
+
+            var jwtToken = await CreateJwtToken(user);
+            authModel.IsAuthenticated = true;
+            authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+            authModel.Email = user.Email;
+            authModel.Username = user.UserName;
+            var roles = await _userManager.GetRolesAsync(user);
+            authModel.Roles = roles.ToList();
+            authModel.RefreshToken = newRefreshToken.Token;
+            authModel.RefreshTokenExpiration = newRefreshToken.ExpiresOn;
+
+            return authModel;
+        }
+
+        public async Task<bool> RevokeTokenAsync(string token)
+        {
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
+
+            if (user == null)
+                return false;
+
+            var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
+
+            if (!refreshToken.IsActive)
+                return false;
+
+            refreshToken.RevokedOn = DateTime.UtcNow;
+
+            await _userManager.UpdateAsync(user);
+
+            return true;
+        }
+
     }
 }

@@ -8,10 +8,10 @@ namespace Donations_App.Models
         [MaxLength(100)]
         public string Name { get; set; }
         public string Description { get; set; }
-        public byte[] Image { get; set; }
         public double Amount { get; set; }
         public double AmountPaid { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
+        public byte[] Image { get; set; }
     }
 }
