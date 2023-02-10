@@ -52,17 +52,6 @@ namespace Donations_App.Controllers
 
         }
 
-        //[HttpGet("GetUserData/{email}")]
-        //public async Task<IActionResult> GetUser(string email)
-        //{
-        //    var user = await _userService.GetUser(email);
-        //    if (user.isNotNull)
-        //    {
-        //        return Ok(user);
-        //    }
-        //    return NotFound("Email is incorrect or not found !!");
-        //}
-
         [HttpPost("ChangePassword/{email}")]
         public async Task<IActionResult> ChangePassword(string email, ChangePasswordDto model)
         {
@@ -103,7 +92,7 @@ namespace Donations_App.Controllers
                     return Ok(result);
 
                 }
-                return NotFound("Email or Verify Code is incorrect");
+                return NotFound(result);
             }
             return BadRequest(ModelState);
         }

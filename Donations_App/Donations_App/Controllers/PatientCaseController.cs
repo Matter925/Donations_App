@@ -7,16 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 namespace Donations_App.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class PatientCaseController : ControllerBase
     {
         private readonly IPatientCaseRepository _patientCaseRepository;
-        private new List<string> _allowedExtenstions = new List<string> { ".jpg", ".png" };
+        private new List<string> _allowedExtenstions = new List<string> { ".jpeg" };
         public PatientCaseController(IPatientCaseRepository patientCaseRepository)
         {
             _patientCaseRepository = patientCaseRepository;
         }
         [HttpGet("GetAllPatientsCases")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             var Cases = await _patientCaseRepository.GetAllPatientsCases();
@@ -42,7 +44,7 @@ namespace Donations_App.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
+        
         [HttpPost("CreatePatientCase")]
         public async Task<IActionResult> AddPatientCase([FromForm]PatientCaseDto dto)
         {
@@ -51,28 +53,28 @@ namespace Donations_App.Controllers
                 if (!_allowedExtenstions.Contains(Path.GetExtension(dto.Image.FileName).ToLower()))
                     return BadRequest("Only .png and .jpg images are allowed!");
                 var result = await _patientCaseRepository.CreatePatientCase(dto);
-                if(result == null)
+                if(result.Success)
                 {
-                    return BadRequest("The Patient Case is exist !!");
+                    return Ok(result);
                 }
-                return Ok(result);
+                return BadRequest(result);
             }
             return BadRequest(ModelState);
         }
 
-        [Authorize(Roles = "Admin")]
+        
         [HttpDelete("DeletePatientCase/{id}")]
         public async Task<IActionResult> DeletePatientCase(int id)
         {
             var result = await _patientCaseRepository.DeletePatientCase(id);
-            if(result != null)
+            if(result.Success)
             {
                 return Ok(result);  
             }
-            return NotFound($"No patient case was found with ID {id} ");
+            return NotFound(result);
         }
 
-        [Authorize(Roles = "Admin")]
+        
         [HttpPut("UpdatePatientCase/{id}")]
         public async Task<IActionResult> UpdatePatientCase(int id, [FromForm]PatientCaseDto dto)
         {
@@ -83,11 +85,11 @@ namespace Donations_App.Controllers
                     return BadRequest("Only .png and .jpg images are allowed!");
                 }  
                 var result = await _patientCaseRepository.UpdatePatientCase(id, dto);
-                if(result == null)
+                if(result.Success)
                 {
-                    return NotFound($"No patient case was found with ID {id} ");
+                    return Ok(result);
                 }
-                return Ok(result); 
+                return NotFound(result); 
             }
             return BadRequest(ModelState);
 

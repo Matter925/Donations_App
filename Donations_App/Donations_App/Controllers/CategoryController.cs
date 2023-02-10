@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Authorization;
 namespace Donations_App.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryServices _categoryServices;
+        private new List<string> _allowedExtenstions = new List<string> { ".jpeg" };
         public CategoryController(ICategoryServices categoryServices)
         {
             _categoryServices = categoryServices;
@@ -21,6 +23,7 @@ namespace Donations_App.Controllers
         //------------------------------------------------------------------
 
         [HttpGet("GetAllCategory")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllCategory()
         {
             var category = await _categoryServices.GetAllCategories();
@@ -28,50 +31,65 @@ namespace Donations_App.Controllers
             return Ok(category);
         }
 
-        [Authorize(Roles = "Admin")]
+        [HttpGet("GetCategoryByID/{id}")]
+        public async Task<IActionResult> GetCategoryByID(int id)
+        {
+            var category = await _categoryServices.GetCategoryByID(id);
+            if(category == null)
+            {
+                return NotFound($"No category was found with ID: {id}");
+            }
+
+            return Ok(category);
+        }
+
+
         [HttpPost("CreateNewCategory")]
-        public async Task<IActionResult> CreateCategory(CategoryDto dto)
+        public async Task<IActionResult> CreateCategory([FromForm] CategoryDto dto)
         {
             if (ModelState.IsValid)
             {
+                if (!_allowedExtenstions.Contains(Path.GetExtension(dto.Image.FileName).ToLower()))
+                    return BadRequest("Only .png and .jpg images are allowed!");
                 var result = await _categoryServices.CreateCategory(dto);
-                if (result == null)
+                if (result.Success)
                 {
-                    return BadRequest("The Category is exist");
+                    return Ok(result);
                 }
-                return Ok(result);
+                return BadRequest(result);
                
             }
             return BadRequest(ModelState);
         }
 
-        [Authorize(Roles = "Admin")]
+        
         [HttpPut("UpdateCategory/{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDto dto)
+        public async Task<IActionResult> UpdateCategory(int id, [FromForm] CategoryDto dto)
         {
             if (ModelState.IsValid)
             {
+                if(!_allowedExtenstions.Contains(Path.GetExtension(dto.Image.FileName).ToLower()))
+                    return BadRequest("Only .png and .jpg images are allowed!");
                 var result =await _categoryServices.UpdateCategory(dto,id);
-                if(result == null)
+                if(result.Success)
                 {
-                    return NotFound($"No category was found with ID {id} ");
+                    return Ok(result);
                 }
-                return Ok(result);
+                return NotFound(result);
             }
             return BadRequest(ModelState);
         }
 
-        [Authorize(Roles = "Admin")]
+        
         [HttpDelete("DeleteCategory/{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-
             var result = await _categoryServices.DeleteCategory(id);
-            if(result == null)
+            if(result.Success)
             {
-                return NotFound();  
+                return Ok(result) ;  
             }
-            return Ok(result);
+            return NotFound(result);
         }
 
     }

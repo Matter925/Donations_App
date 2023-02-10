@@ -10,5 +10,7 @@ namespace Donations_App.Dtos.CategoryDtos
 
         [Required, MaxLength(2500)]
         public string Description { get; set; }
+        [Required]
+        public IFormFile Image { get; set; }
     }
 }

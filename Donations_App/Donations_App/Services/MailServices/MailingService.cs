@@ -1,4 +1,5 @@
-﻿using Donations_App.Settings;
+﻿using Donations_App.Dtos.ReturnDto;
+using Donations_App.Settings;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
@@ -13,7 +14,7 @@ namespace Donations_App.Services
         {
             _mailSettings = mailSettings.Value;
         }
-        public async Task SendEmailAsync(string mailTo, string subject, string body, IList<IFormFile> attachments = null)
+        public async Task<GeneralRetDto> SendEmailAsync(string mailTo, string subject, string body, IList<IFormFile> attachments = null)
         {
             var email = new MimeMessage
             {
@@ -42,8 +43,22 @@ namespace Donations_App.Services
             using var smtp = new SmtpClient();
             smtp.Connect(_mailSettings.Host , _mailSettings.Port , SecureSocketOptions.StartTls);
             smtp.Authenticate(_mailSettings.Email, _mailSettings.Password);
-            await smtp.SendAsync(email);
-            smtp.Disconnect(true);
+            var maiSend = await smtp.SendAsync(email);
+            if (maiSend.StartsWith("2"))
+            {
+                smtp.Disconnect(true);
+                return new GeneralRetDto
+                {
+                    Success = true,
+                    Message ="Sucess"
+                };
+            }
+            return new GeneralRetDto
+            {
+                Success = false,
+                Message = "Email Is Not Valid"
+            };
+
         }
     }
 }

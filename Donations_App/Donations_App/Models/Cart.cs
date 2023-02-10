@@ -11,7 +11,7 @@ namespace DonationsApp.Models
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
 
-        public ICollection<CartItem> CartItems { get; set; }
+        //public ICollection<CartItem> CartItems { get; set; }
 
     }
 }

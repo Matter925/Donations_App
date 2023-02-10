@@ -123,34 +123,67 @@ namespace Donations_App.Services
             };
             await _context.Carts.AddAsync(addCart);
             _context.SaveChanges();
-
-            var filePath = $"{Directory.GetCurrentDirectory()}\\Templates\\EmailTemplate.html";
-            var str = new StreamReader(filePath);
-            var mailText = str.ReadToEnd();
-            str.Close();
-            mailText = mailText.Replace("[username]", user.FullName).Replace("[email]", user.Email);
-            await _mailingService.SendEmailAsync(user.Email, "Welcome to our website ", mailText);
-
-
             return new AuthModel
             {
                 Message = "User Registered successfully ",
                 Id = user.Id,
                 Email = user.Email,
-               FullName = user.FullName,   
+                FullName = user.FullName,
                 Username = user.UserName,
                 CartId = user.Cart.Id,
                 ExpireOn = jwtSecurityToken.ValidTo,
                 IsAuthenticated = true,
                 Roles = new List<string> { "User" },
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-                RefreshToken = refreshToken.Token ,
+                RefreshToken = refreshToken.Token,
                 RefreshTokenExpiration = refreshToken.ExpiresOn
 
             };
+
+           // var filePath = $"{Directory.GetCurrentDirectory()}\\Templates\\EmailTemplate.html";
+           // var str = new StreamReader(filePath);
+           // var mailText = str.ReadToEnd();
+           // str.Close();
+           // mailText = mailText.Replace("[username]", user.FullName).Replace("[email]", user.Email);
+           //var Sendmail = await _mailingService.SendEmailAsync(user.Email, "Welcome to our website ", mailText);
+           // if(Sendmail.Success)
+           // {
+           //     return new AuthModel
+           //     {
+           //         Message = "User Registered successfully ",
+           //         Id = user.Id,
+           //         Email = user.Email,
+           //         FullName = user.FullName,
+           //         Username = user.UserName,
+           //         CartId = user.Cart.Id,
+           //         ExpireOn = jwtSecurityToken.ValidTo,
+           //         IsAuthenticated = true,
+           //         Roles = new List<string> { "User" },
+           //         Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+           //         RefreshToken = refreshToken.Token,
+           //         RefreshTokenExpiration = refreshToken.ExpiresOn
+
+           //     };
+
+           // }
+           // return new AuthModel
+           // {
+           //     Message = Sendmail.Message,
+           //     Id = user.Id,
+           //     Email = user.Email,
+           //     FullName = user.FullName,
+           //     Username = user.UserName,
+           //     CartId = user.Cart.Id,
+           //     ExpireOn = jwtSecurityToken.ValidTo,
+           //     IsAuthenticated = true,
+           //     Roles = new List<string> { "User" },
+           //     Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+           //     RefreshToken = refreshToken.Token,
+           //     RefreshTokenExpiration = refreshToken.ExpiresOn
+
+           // };
+
         }
-
-
 
 
         // Profile Settings -----------------------------------------------------------------------------------------------------------
@@ -274,10 +307,10 @@ namespace Donations_App.Services
 
         }
 
-        public async Task<RetRestPassDto> ForgotPasswordAsync(string email)
+        public async Task<GeneralRetDto> ForgotPasswordAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            if (user == null) return new RetRestPassDto
+            if (user == null) return new GeneralRetDto
             {
                 Success = false,
                 Message = "Email is incorrect or not found !!",
@@ -295,14 +328,14 @@ namespace Donations_App.Services
             };
             await _context.VerifyCodes.AddAsync(Vcode);
             _context.SaveChanges();
-            return new RetRestPassDto
+            return new GeneralRetDto
             {
                 Success = true,
                 Message = "Verify code sent to the email successfully !!",
             };
         }
 
-        public async Task<RetRestPassDto> CreateNewPassword(string email, CreatePasswordDto model)
+        public async Task<GeneralRetDto> CreateNewPassword(string email, CreatePasswordDto model)
         {
 
             var user = await _userManager.FindByEmailAsync(email);
@@ -311,34 +344,37 @@ namespace Donations_App.Services
                 var res =await _userManager.ResetPasswordAsync(user , model.RestToken ,model.NewPassword);
                 if(res.Succeeded)
                 {
-                    return new RetRestPassDto
+                    return new GeneralRetDto
                     {
                         Success = true,
                         Message="Successfully Changed "
                     };
                 }
-                return new RetRestPassDto
+                return new GeneralRetDto
                 {
                     Success = false,
                     Message = "Error of change password"
                 };
 
             }
-            return new RetRestPassDto
+            return new GeneralRetDto
             {
                 Success = false,
-                Message = "User is not found !!"
+                Message = "Email is incorrect or not found !!"
             };
 
 
         }
 
-        public async Task<ReturnRestToken> VerifyCodeAsync(VerifyCodeDto codeDto)
+        public async Task<RestTokenDto> VerifyCodeAsync(VerifyCodeDto codeDto)
         {
             var user = await _userManager.FindByEmailAsync(codeDto.email);
             if (user == null)
             {
-                return new ReturnRestToken { Success= false};
+                return new RestTokenDto {
+                    Success = false,
+                    Message = "Email Incorrect or not found" 
+                };
             };
             var result = await _context.VerifyCodes.SingleOrDefaultAsync(r => r.UserId == user.Id);
             if (result.Code == codeDto.Code)
@@ -347,24 +383,28 @@ namespace Donations_App.Services
                 _context.SaveChanges();
 
                 var restToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-                return new ReturnRestToken
+                return new RestTokenDto
                 {
                     Success = true ,
+                    Message = "Successfully Verify Code",
                     RestToken = restToken
                 };
             }
-            return new ReturnRestToken { Success = false};
+            return new RestTokenDto { 
+                Success = false,
+                Message = "Verify Code is incorrect"
+            };
         }
 
 
         // Admin Methods -------------------------------------------------------------------------------------------------------------
 
 
-        public async Task<AdminDto> CreateRole(CreateRoleDto createRole)
+        public async Task<GeneralRetDto> CreateRole(CreateRoleDto createRole)
         {
             if(await _roleManager.RoleExistsAsync(createRole.RoleName))
             {
-                return new AdminDto{
+                return new GeneralRetDto{
                     Success = false ,
                     Message = "The Role already exist !!"
                 };
@@ -376,13 +416,13 @@ namespace Donations_App.Services
             });
             if (result.Succeeded)
             {
-                return new AdminDto
+                return new GeneralRetDto
                 {
                     Success = true,
                     Message = "Successfully"
                 };
             }
-            return new AdminDto
+            return new GeneralRetDto
             {
                 Success = false,
                 Message = "Sonething went wrong"
@@ -390,12 +430,12 @@ namespace Donations_App.Services
 
         }
 
-        public async Task<AdminDto> AssignRole(AssignRoleDto assignRole)
+        public async Task<GeneralRetDto> AssignRole(AssignRoleDto assignRole)
         {
             var userDatails = await _userManager.FindByEmailAsync(assignRole.Email);
             if (userDatails is null || !await _roleManager.RoleExistsAsync(assignRole.RoleName))
             {
-                return new AdminDto
+                return new GeneralRetDto
                 {
                     Success = false,
                     Message = "Invalid user Email or Role"
@@ -403,7 +443,7 @@ namespace Donations_App.Services
             }
 
             if (await _userManager.IsInRoleAsync(userDatails, assignRole.RoleName))
-                return new AdminDto
+                return new GeneralRetDto
                 {
                     Success = false,
                     Message = "User already assigned to this role",
@@ -411,13 +451,13 @@ namespace Donations_App.Services
             var result = await _userManager.AddToRoleAsync(userDatails, assignRole.RoleName);
             if (result.Succeeded)
             {
-                return new AdminDto
+                return new GeneralRetDto
                 {
                     Success = true,
                     Message = "Successfully Assigned",
                 };
             }
-            return new AdminDto
+            return new GeneralRetDto
             {
                 Success = false,
                 Message = "Sonething went wrong",

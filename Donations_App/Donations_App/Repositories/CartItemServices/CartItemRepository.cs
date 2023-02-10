@@ -1,5 +1,6 @@
 ﻿using Donations_App.Data;
 using Donations_App.Dtos.CartDtos;
+using Donations_App.Dtos.ReturnDto;
 using Donations_App.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,20 +13,122 @@ namespace Donations_App.Repositories.CartItemServices
         {
             _context = context;
         }
-        public async Task<CartItem> AddItem(CartItemAddDto cartItemAdd)
+        public async Task<GeneralRetDto> AddItem(CartItemAddDto dto)
         {
+            var IsExist = await _context.CartItems.AnyAsync(c=> c.CartId==dto.CartId && c.PatientCaseId == dto.PatientCaseId);
+            if (IsExist)
+            {
+                return new GeneralRetDto
+                {
+                    Success = false,
+                    Message ="The Item is exist"
+                };
+            }
             
             var cartItem = new CartItem
             {
-                PatientCaseId = cartItemAdd.PatientCaseId,
-                CartId = cartItemAdd.CartId,
-                setAmount = cartItemAdd.setAmount
+                PatientCaseId = dto.PatientCaseId,
+                CartId = dto.CartId,
+                setAmount = dto.setAmount
             };
             await _context.AddAsync(cartItem);
             await _context.SaveChangesAsync();
-            
-            return await _context.CartItems.Include(p=>p.PatientCase).SingleOrDefaultAsync(c=> c.CartId== cartItemAdd.CartId);
 
+            return new GeneralRetDto
+            {
+                Success = true,
+                Message = "Successfully Added"
+            }; 
+
+        }
+
+        public async Task<GeneralRetDto> DeleteAll(int cartId)
+        {
+            var item = await _context.Carts.FindAsync(cartId);
+            if (item == null)
+            {
+                return new GeneralRetDto
+                {
+                    Success = false,
+                    Message = "Cart Id is not found !!"
+                };
+            }
+            var items = await _context.CartItems.Where(e => e.CartId == cartId).ToListAsync();
+            
+                foreach (var ex in items)
+                {
+                    _context.CartItems.Remove(ex);
+                }
+                await _context.SaveChangesAsync();
+                return new GeneralRetDto
+                {
+                    Success = true,
+                    Message = "Successfully Deleted Items"
+                };
+        }
+
+        public async Task<GeneralRetDto> DeleteItem(int ItemId)
+        {
+            var item = await _context.CartItems.FindAsync(ItemId);
+            if (item == null)
+            {
+                return new GeneralRetDto
+                {
+                    Success = false,
+                    Message = "Item Id is not found !!"
+                };
+            }
+            _context.CartItems.Remove(item);
+            await _context.SaveChangesAsync();
+            return new GeneralRetDto
+            {
+                Success= true,
+                Message ="Successfully Deleted"
+            };
+
+        }
+
+        public async Task<CartItem> GetItem(int ItemId)
+        {
+            var IsExist = await _context.CartItems.FindAsync(ItemId);
+            if (IsExist == null)
+            {
+                return null;
+            }
+            var Item = await _context.CartItems.Include(c => c.PatientCase).SingleOrDefaultAsync(r => r.Id == ItemId);
+            return Item;
+
+        }
+
+        public async Task<IEnumerable<CartItem>> GetItems(int CartId)
+        {
+            var IsExist = await _context.Carts.FindAsync(CartId);
+            if(IsExist==null)
+            {
+                return null;
+            }
+            var Items = await _context.CartItems.Include(c => c.PatientCase).Where(o => o.CartId == CartId).ToListAsync();
+            return Items;
+        }
+
+        public async Task<GeneralRetDto> UpdateAmount(UpdateAmountDto dto)
+        {
+            var item = await _context.CartItems.FindAsync(dto.ItemID);
+            if(item==null)
+            {
+                return new GeneralRetDto
+                {
+                    Success=false,
+                    Message ="Item Id is not found !!"
+                };
+            }
+            item.setAmount = dto.newAmount;
+            await _context.SaveChangesAsync();
+            return new GeneralRetDto { 
+                Success = true ,
+                Message ="Successfully Updated"
+                
+            };
         }
     }
 }

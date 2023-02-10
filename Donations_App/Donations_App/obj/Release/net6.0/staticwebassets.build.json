@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "Hash": "9F6ibWu1LHXuInlVnEAs/a++YRr+EsbXlP78Tcr2c68=",
+  "Source": "Donations_App",
+  "BasePath": "_content/Donations_App",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "Donations_App\\wwwroot",
+      "Source": "Donations_App",
+      "ContentRoot": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\",
+      "BasePath": "_content/Donations_App",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\PatientCaseImages\\finalclass.drawio (2).png",
+      "SourceId": "Donations_App",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\",
+      "BasePath": "_content/Donations_App",
+      "RelativePath": "PatientCaseImages/finalclass.drawio (2).png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\PatientCaseImages\\finalclass.drawio (2).png"
+    }
+  ]
+}

@@ -10,8 +10,9 @@ namespace Donations_App.Models
         public string Description { get; set; }
         public double Amount { get; set; }
         public double AmountPaid { get; set; }
+        public string ImageName { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
-        public byte[] Image { get; set; }
+        
     }
 }

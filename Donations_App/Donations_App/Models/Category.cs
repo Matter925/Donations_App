@@ -18,5 +18,6 @@ namespace Donations_App.Models
         [Required , MaxLength(2500)]
         public string Description { get; set; }
 
+        public string ImageName { get; set; }
     }
 }

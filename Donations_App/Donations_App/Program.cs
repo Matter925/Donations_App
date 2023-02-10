@@ -13,6 +13,8 @@ using System.Text.Json.Serialization;
 using Donations_App.Repositories.PatientCaseServices;
 using Donations_App.Repositories.CartItemServices;
 
+using Donations_App.Repositories.FileUploadedServices;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -24,11 +26,17 @@ builder.Services.AddScoped<IMailingService, MailingService>();
 builder.Services.AddScoped<ICategoryServices, CategoryServices>();
 builder.Services.AddScoped<IPatientCaseRepository, PatientCaseRepository>();
 builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
+builder.Services.AddScoped<IFileUploadedService, FileUploadedService>();
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
-
 
 
 
@@ -67,12 +75,12 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
+//if (app.Environment.IsDevelopment())
+//{
+   app.UseSwagger();
+   app.UseSwaggerUI();
+//}
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
