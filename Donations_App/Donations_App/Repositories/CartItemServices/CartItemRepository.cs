@@ -123,6 +123,7 @@ namespace Donations_App.Repositories.CartItemServices
                 };
             }
             item.setAmount = dto.newAmount;
+            _context.CartItems.Update(item);
             await _context.SaveChangesAsync();
             return new GeneralRetDto { 
                 Success = true ,

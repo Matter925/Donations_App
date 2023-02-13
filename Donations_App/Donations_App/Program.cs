@@ -14,6 +14,7 @@ using Donations_App.Repositories.PatientCaseServices;
 using Donations_App.Repositories.CartItemServices;
 
 using Donations_App.Repositories.FileUploadedServices;
+using Donations_App.Repositories.RequestServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,7 @@ builder.Services.AddScoped<IMailingService, MailingService>();
 builder.Services.AddScoped<ICategoryServices, CategoryServices>();
 builder.Services.AddScoped<IPatientCaseRepository, PatientCaseRepository>();
 builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
+builder.Services.AddScoped<IRequestRepository, RequestRepository>();
 builder.Services.AddScoped<IFileUploadedService, FileUploadedService>();
 
 

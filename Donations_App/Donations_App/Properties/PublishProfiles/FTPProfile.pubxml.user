@@ -8,14 +8,14 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAZ0b6qo562kqfq5V5j+BgiwAAAAACAAAAAAAQZgAAAAEAACAAAACXe+5MO+kSZKVmk3MDZrwXvfOGxMA1fiA0hWksSLz5DAAAAAAOgAAAAAIAACAAAAAnvQa9DjzJZMk1ylXPAaLwvodDdWTj+jBoTxGSGAaCcSAAAABAsPZoKjx5KV1jbtodXhgLBAyA5FXgDaMA8r3tL4Rhy0AAAACYtQgfFwhgECVO0HzqldeW/RHVUNv7X5RY0qkgBjsyHgdqbPZmOZvaVrqjPeeDcegZ0NqfZTku2vMsw28zIYAb</EncryptedPassword>
     <_PublishTargetUrl>ftp://MBrother.somee.com/www.MBrother.somee.com</_PublishTargetUrl>
-    <History>False|2023-02-10T18:36:46.3068858Z;False|2023-02-10T20:32:57.5520863+02:00;False|2023-02-10T20:29:54.6434229+02:00;False|2023-02-10T19:55:20.9923063+02:00;True|2023-02-10T19:47:46.3114381+02:00;True|2023-02-10T18:24:51.5344462+02:00;False|2023-02-10T18:23:13.7273331+02:00;False|2023-02-10T18:22:46.5865617+02:00;False|2023-02-10T17:42:03.3404420+02:00;False|2023-02-10T17:41:17.0496238+02:00;True|2023-02-10T17:15:58.3968587+02:00;False|2023-02-10T17:12:50.7763091+02:00;True|2023-02-10T17:03:46.5829086+02:00;True|2023-02-10T14:37:46.1123887+02:00;False|2023-02-10T14:06:33.8604581+02:00;False|2023-02-10T14:04:24.7520709+02:00;True|2023-02-10T13:41:36.4484248+02:00;False|2023-02-10T11:23:52.3441160+02:00;False|2023-02-10T10:59:36.2330928+02:00;False|2023-02-10T10:53:36.2354580+02:00;False|2023-02-10T10:36:12.8106991+02:00;False|2023-02-10T10:33:59.6389006+02:00;True|2023-02-10T10:22:25.1517444+02:00;</History>
+    <History>True|2023-02-12T08:38:22.6879174Z;True|2023-02-11T22:17:16.2943081+02:00;True|2023-02-10T22:26:23.7936486+02:00;False|2023-02-10T22:25:16.4296901+02:00;True|2023-02-10T22:19:18.9906335+02:00;False|2023-02-10T20:36:46.3068858+02:00;False|2023-02-10T20:32:57.5520863+02:00;False|2023-02-10T20:29:54.6434229+02:00;False|2023-02-10T19:55:20.9923063+02:00;True|2023-02-10T19:47:46.3114381+02:00;True|2023-02-10T18:24:51.5344462+02:00;False|2023-02-10T18:23:13.7273331+02:00;False|2023-02-10T18:22:46.5865617+02:00;False|2023-02-10T17:42:03.3404420+02:00;False|2023-02-10T17:41:17.0496238+02:00;True|2023-02-10T17:15:58.3968587+02:00;False|2023-02-10T17:12:50.7763091+02:00;True|2023-02-10T17:03:46.5829086+02:00;True|2023-02-10T14:37:46.1123887+02:00;False|2023-02-10T14:06:33.8604581+02:00;False|2023-02-10T14:04:24.7520709+02:00;True|2023-02-10T13:41:36.4484248+02:00;False|2023-02-10T11:23:52.3441160+02:00;False|2023-02-10T10:59:36.2330928+02:00;False|2023-02-10T10:53:36.2354580+02:00;False|2023-02-10T10:36:12.8106991+02:00;False|2023-02-10T10:33:59.6389006+02:00;True|2023-02-10T10:22:25.1517444+02:00;</History>
   </PropertyGroup>
   <ItemGroup>
     <File Include="appsettings.Development.json">
       <publishTime>01/12/2023 09:01:32</publishTime>
     </File>
     <File Include="appsettings.json">
-      <publishTime>02/10/2023 19:45:38</publishTime>
+      <publishTime>02/10/2023 22:06:33</publishTime>
     </File>
     <File Include="Azure.Core.dll">
       <publishTime>04/04/2022 23:38:56</publishTime>
@@ -27,16 +27,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/18/2022 19:00:04</publishTime>
     </File>
     <File Include="Donations_App.deps.json">
-      <publishTime>02/10/2023 20:33:22</publishTime>
+      <publishTime>02/12/2023 10:37:56</publishTime>
     </File>
     <File Include="Donations_App.dll">
-      <publishTime>02/10/2023 20:33:22</publishTime>
+      <publishTime>02/12/2023 10:37:55</publishTime>
     </File>
     <File Include="Donations_App.exe">
-      <publishTime>02/10/2023 19:46:06</publishTime>
+      <publishTime>02/12/2023 10:37:55</publishTime>
     </File>
     <File Include="Donations_App.pdb">
-      <publishTime>02/10/2023 20:33:22</publishTime>
+      <publishTime>02/12/2023 10:37:55</publishTime>
     </File>
     <File Include="Donations_App.runtimeconfig.json">
       <publishTime>02/08/2023 22:24:54</publishTime>
@@ -198,7 +198,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/25/2023 21:35:22</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>02/10/2023 20:33:22</publishTime>
+      <publishTime>02/12/2023 10:37:56</publishTime>
     </File>
     <File Include="wwwroot/CategoryImages/c5848a2d-9d51-4957-bb21-a7744d15259c.jpg">
       <publishTime>02/10/2023 13:33:42</publishTime>

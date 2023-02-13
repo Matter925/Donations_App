@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Donations_App.Controllers
 {
-    
-    [Route("api/[controller]")]
     [Authorize]
+    [Route("api/[controller]")]
     [ApiController]
     public class CartController : ControllerBase
     {

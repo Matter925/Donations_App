@@ -32,6 +32,8 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\CategoryImages\" />
+    <Folder Include="wwwroot\RequestFilesID\" />
+    <Folder Include="wwwroot\RequestFilesReport\" />
   </ItemGroup>
 
 </Project>

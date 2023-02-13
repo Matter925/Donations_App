@@ -7,6 +7,9 @@
         //Task<string> GetUrlCategoryImage(string ImageName);
         Task<string> UploadCaseImagesAsync(IFormFile file);
 
+        Task<string> UploadRequestFileID(IFormFile file);
+        Task<string> UploadRequestFileReport(IFormFile file);
+
         //Task<string> GetUrlCaseImage(string ImageName);
 
     }

@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Donations_App.Controllers
 {
-    [Route("api/[controller]")]
     [Authorize(Roles = "Admin")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
     {

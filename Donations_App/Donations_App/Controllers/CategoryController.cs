@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Donations_App.Controllers
 {
-    [Route("api/[controller]")]
     [Authorize(Roles = "Admin")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryServices _categoryServices;
-        private new List<string> _allowedExtenstions = new List<string> { ".jpeg" };
+        private new List<string> _allowedExtenstions = new List<string> { ".jpeg", ".webp" };
         public CategoryController(ICategoryServices categoryServices)
         {
             _categoryServices = categoryServices;
@@ -50,7 +50,7 @@ namespace Donations_App.Controllers
             if (ModelState.IsValid)
             {
                 if (!_allowedExtenstions.Contains(Path.GetExtension(dto.Image.FileName).ToLower()))
-                    return BadRequest("Only .png and .jpg images are allowed!");
+                    return BadRequest("Only .webp and .jpeg images are allowed!");
                 var result = await _categoryServices.CreateCategory(dto);
                 if (result.Success)
                 {
@@ -69,7 +69,7 @@ namespace Donations_App.Controllers
             if (ModelState.IsValid)
             {
                 if(!_allowedExtenstions.Contains(Path.GetExtension(dto.Image.FileName).ToLower()))
-                    return BadRequest("Only .png and .jpg images are allowed!");
+                    return BadRequest("Only .webp and .jpeg images are allowed!");
                 var result =await _categoryServices.UpdateCategory(dto,id);
                 if(result.Success)
                 {

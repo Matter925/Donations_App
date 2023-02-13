@@ -14,8 +14,8 @@ using Donations_App.Dtos.UserDto;
 
 namespace Donations_App.Controllers
 {
-    [Route("api/[controller]")]
     [Authorize]
+    [Route("api/[controller]")]
     [ApiController]
     public class AuthUserController : ControllerBase
     {

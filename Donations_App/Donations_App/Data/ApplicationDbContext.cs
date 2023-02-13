@@ -17,5 +17,6 @@ namespace Donations_App.Data
         public DbSet<VerifyCode> VerifyCodes { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<PatientCase> PatientsCases { get; set; }
+        public DbSet<Request> Requests { get; set; }
     }
 }
