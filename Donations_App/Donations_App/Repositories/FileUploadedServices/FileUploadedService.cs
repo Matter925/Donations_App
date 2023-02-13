@@ -12,7 +12,8 @@ namespace Donations_App.Repositories.FileUploadedServices
         public async Task<string> UploadCategoryImagesAsync(IFormFile file )
         {
             string Pathcom = Path.Combine("//CategoryImages/", file.FileName);
-            string HostUrl = "http://MBrother.somee.com";
+            //string HostUrl = "http://MBrother.somee.com";
+            string HostUrl = "https://localhost:7038";
             string PathImage = HostUrl + Pathcom;
 
             string filePathImage = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/CategoryImages/", file.FileName);
@@ -29,7 +30,8 @@ namespace Donations_App.Repositories.FileUploadedServices
         {
 
             string Pathcom = Path.Combine("//PatientCaseImages/", file.FileName);
-            string HostUrl = "http://MBrother.somee.com";
+            //string HostUrl = "http://MBrother.somee.com";
+            string HostUrl = "https://localhost:7038";
             string PathImage = HostUrl + Pathcom;
 
             string filePathImage = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/PatientCaseImages/", file.FileName);
@@ -44,7 +46,8 @@ namespace Donations_App.Repositories.FileUploadedServices
         public async Task<string> UploadRequestFileID(IFormFile file)
         {
             string Pathcom = Path.Combine("//RequestFilesID/", file.FileName);
-            string HostUrl = "http://MBrother.somee.com";
+            //string HostUrl = "http://MBrother.somee.com";
+            string HostUrl = "https://localhost:7038";
             string PathImage = HostUrl + Pathcom;
 
             string filePathImage = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/RequestFilesID/", file.FileName);
@@ -60,7 +63,8 @@ namespace Donations_App.Repositories.FileUploadedServices
         public async Task<string> UploadRequestFileReport(IFormFile file)
         {
             string Pathcom = Path.Combine("//RequestFilesReport/", file.FileName);
-            string HostUrl = "http://MBrother.somee.com";
+            //string HostUrl = "http://MBrother.somee.com";
+            string HostUrl = "https://localhost:7038";
             string PathImage = HostUrl + Pathcom;
 
             string filePathImage = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/RequestFilesReport/", file.FileName);
