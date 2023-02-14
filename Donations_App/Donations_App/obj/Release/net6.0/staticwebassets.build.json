@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "9F6ibWu1LHXuInlVnEAs/a++YRr+EsbXlP78Tcr2c68=",
+  "Hash": "mYkgQd+Ao545hifcAH6a2PIPRr7whsq0HLiLVwnQsoA=",
   "Source": "Donations_App",
   "BasePath": "_content/Donations_App",
   "Mode": "Default",
@@ -32,6 +32,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\PatientCaseImages\\finalclass.drawio (2).png"
+    },
+    {
+      "Identity": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\RequestFilesID\\Milion.jpeg",
+      "SourceId": "Donations_App",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\",
+      "BasePath": "_content/Donations_App",
+      "RelativePath": "RequestFilesID/Milion.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\RequestFilesID\\Milion.jpeg"
+    },
+    {
+      "Identity": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\RequestFilesReport\\Milion.jpeg",
+      "SourceId": "Donations_App",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\",
+      "BasePath": "_content/Donations_App",
+      "RelativePath": "RequestFilesReport/Milion.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\RequestFilesReport\\Milion.jpeg"
     }
   ]
 }

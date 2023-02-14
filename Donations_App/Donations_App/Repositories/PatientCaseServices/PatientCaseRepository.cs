@@ -21,7 +21,19 @@ namespace Donations_App.Repositories.PatientCaseServices
         public async Task<IEnumerable<PatientCase>> GetAllPatientsCases()
         {
             var cases = await _context.PatientsCases.OrderBy(o => o.Name).Include(m => m.Category).ToListAsync();
-
+            if(cases != null)
+            {
+                foreach (var item in cases)
+                {
+                    if (item.AmountPaid == item.Amount)
+                    {
+                        item.IsComplete = true;
+                        _context.PatientsCases.Update(item);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }    
+            
             return cases;
        
         }

@@ -566,3 +566,85 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230213114644_AddRequest')
+BEGIN
+    CREATE TABLE [Requests] (
+        [Id] int NOT NULL IDENTITY,
+        [FullName] nvarchar(max) NOT NULL,
+        [Age] int NOT NULL,
+        [Phone] nvarchar(max) NOT NULL,
+        [Address] nvarchar(max) NOT NULL,
+        [ID_Photo] nvarchar(max) NOT NULL,
+        [Medical_Report] nvarchar(max) NOT NULL,
+        [Description_Request] nvarchar(max) NOT NULL,
+        [UserId] nvarchar(450) NOT NULL,
+        [Request_Status] bit NOT NULL,
+        CONSTRAINT [PK_Requests] PRIMARY KEY ([Id]),
+        CONSTRAINT [FK_Requests_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230213114644_AddRequest')
+BEGIN
+    CREATE INDEX [IX_Requests_UserId] ON [Requests] ([UserId]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230213114644_AddRequest')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230213114644_AddRequest', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230213130806_ModifyRequest')
+BEGIN
+    EXEC sp_rename N'[Requests].[Request_Status]', N'Rejected', N'COLUMN';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230213130806_ModifyRequest')
+BEGIN
+    ALTER TABLE [Requests] ADD [Accepted] bit NOT NULL DEFAULT CAST(0 AS bit);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230213130806_ModifyRequest')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230213130806_ModifyRequest', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230214085757_modifyPatientCaseModel')
+BEGIN
+    ALTER TABLE [PatientsCases] ADD [IsComplete] bit NOT NULL DEFAULT CAST(0 AS bit);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230214085757_modifyPatientCaseModel')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230214085757_modifyPatientCaseModel', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+

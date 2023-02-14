@@ -11,6 +11,7 @@ namespace Donations_App.Models
         public double Amount { get; set; }
         public double AmountPaid { get; set; }
         public string ImageName { get; set; }
+        public bool IsComplete { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         
