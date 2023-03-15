@@ -6,13 +6,14 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Donations_App.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
+    
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryServices _categoryServices;
-        private new List<string> _allowedExtenstions = new List<string> { ".jpeg", ".webp" };
+        private new List<string> _allowedExtenstions = new List<string> { ".jpeg", ".webp", ".svg" };
         public CategoryController(ICategoryServices categoryServices)
         {
             _categoryServices = categoryServices;
@@ -21,7 +22,7 @@ namespace Donations_App.Controllers
         //------------------------------------------------------------------
         // Add The EndPoints of The Category Model
         //------------------------------------------------------------------
-
+       
         [HttpGet("GetAllCategory")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllCategory()
@@ -30,8 +31,9 @@ namespace Donations_App.Controllers
 
             return Ok(category);
         }
-
+        
         [HttpGet("GetCategoryByID/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCategoryByID(int id)
         {
             var category = await _categoryServices.GetCategoryByID(id);

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Donations_App.Models
 {
@@ -12,10 +13,11 @@ namespace Donations_App.Models
         public string ID_Photo { get; set; }
         public string Medical_Report { get; set; }
         public string Description_Request { get; set; }
-        public bool Accepted { get; set; }
-        public bool Rejected { get; set; }
+        public string RequestStatus { get; set; }
+       
         public string UserId { get; set; }
         [ForeignKey("UserId")]
+        [JsonIgnore]
         public ApplicationUser User { get; set; }
 
     }

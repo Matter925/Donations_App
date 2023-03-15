@@ -6,14 +6,14 @@ namespace Donations_App.Repositories.RequestServices
 {
     public interface IRequestRepository
     {
-        Task<IEnumerable<Request>> GetAllRequests();
+        Task<IEnumerable<UserRequestsDto>> GetAllRequests();
         Task<IEnumerable<Request>> GetByUserID(string UserId);
         Task<GeneralRetDto> CreateRequest(RequestDto Dto);
 
         Task<GeneralRetDto> AccepteRequest(int RequestID);
         Task<GeneralRetDto> RejecteRequest(int RequestID);
 
-        //Task<GeneralRetDto> UpdateCategory(CategoryDto dto, int id);
-        //Task<GeneralRetDto> DeleteCategory(int id);
+        Task<Request> GetRequestByID(int id);
+        Task<GeneralRetDto> DeleteRequest(int RequestId);
     }
 }

@@ -22,18 +22,18 @@ namespace Donations_App.Controllers
         public async Task<IActionResult> GetAllRequests()
         {
             var requests = await _requestRepository.GetAllRequests();
-
             return Ok(requests);
+
         }
        
-        [HttpGet("GetRequestsByUserID")]
+        [HttpGet("GetUserRequests/{UserId}")]
         public async Task<IActionResult> GetByUserID(string UserId)
         {
             var requests = await _requestRepository.GetByUserID(UserId);
 
             return Ok(requests);
         }
-
+       
         [HttpPost("ApplyRequest")]
         public async Task<IActionResult> ApplyRequest([FromForm] RequestDto dto)
         {
@@ -66,6 +66,29 @@ namespace Donations_App.Controllers
         public async Task<IActionResult> RejecteRequest(int RequestID)
         {
             var result = await _requestRepository.RejecteRequest(RequestID);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return NotFound(result);
+        }
+
+        [HttpGet("GetRequestByID/{RequestId}")]
+        public async Task<IActionResult> GetRequestByID(int RequestId)
+        {
+            var result = await _requestRepository.GetRequestByID(RequestId);
+            if (result == null)
+            {
+                return NotFound($"No request was found with ID: {RequestId}");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpDelete("DeleteRequest/{id}")]
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            var result = await _requestRepository.DeleteRequest(id);
             if (result.Success)
             {
                 return Ok(result);

@@ -7,7 +7,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAk1XUmxfv3Emb+pz5zW50rQAAAAACAAAAAAAQZgAAAAEAACAAAACSf85Mk0dOCLcMZWwV+eIvblD4JdUSNfB1LXDBHiDnTQAAAAAOgAAAAAIAACAAAAA/mBro1m6ucu5i4HUQR9WbOtQS89hZHNYyo80CxzpBsiAAAAAMPG4fciYMow43zCofnshCibWE5narc0wVHepsHGWOx0AAAACb9V1Fl8hJjdHphJP7bGEZOmP65+vOWtWKAjoGoxeSxdrTCwMjIHfugYyvJNEen9v86vbHHOwq4JH2DCexbeD7</EncryptedPassword>
-    <History>True|2023-02-14T09:48:45.3212482Z;False|2023-02-14T11:41:55.4869486+02:00;</History>
+    <History>True|2023-03-15T18:39:00.0475067Z;True|2023-03-15T20:37:05.2299595+02:00;True|2023-02-16T17:28:26.2110220+02:00;False|2023-02-16T17:19:56.3889770+02:00;False|2023-02-16T17:15:30.7617694+02:00;False|2023-02-16T17:10:41.5594935+02:00;True|2023-02-15T16:07:14.0931635+02:00;True|2023-02-15T06:53:01.0994549+02:00;True|2023-02-14T16:34:13.5821058+02:00;False|2023-02-14T16:32:55.2468800+02:00;True|2023-02-14T11:48:45.3212482+02:00;False|2023-02-14T11:41:55.4869486+02:00;</History>
     <_PublishTargetUrl>ftp://MBrother.somee.com/www.MBrother.somee.com</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
@@ -25,10 +25,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/12/2023 09:01:32</publishTime>
     </File>
     <File Include="appsettings.json">
-      <publishTime>02/14/2023 11:36:10</publishTime>
+      <publishTime>03/15/2023 20:28:23</publishTime>
     </File>
     <File Include="appsettings.production.json">
-      <publishTime>02/14/2023 11:43:53</publishTime>
+      <publishTime>03/15/2023 20:38:25</publishTime>
     </File>
     <File Include="Azure.Core.dll">
       <publishTime>04/04/2022 23:38:56</publishTime>
@@ -40,19 +40,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/18/2022 19:00:04</publishTime>
     </File>
     <File Include="Donations_App.deps.json">
-      <publishTime>02/14/2023 11:43:53</publishTime>
+      <publishTime>03/15/2023 20:38:25</publishTime>
     </File>
     <File Include="Donations_App.dll">
-      <publishTime>02/14/2023 11:43:53</publishTime>
+      <publishTime>03/15/2023 20:38:25</publishTime>
     </File>
     <File Include="Donations_App.exe">
-      <publishTime>02/14/2023 11:43:53</publishTime>
+      <publishTime>03/15/2023 20:38:25</publishTime>
     </File>
     <File Include="Donations_App.pdb">
-      <publishTime>02/14/2023 11:43:53</publishTime>
+      <publishTime>03/15/2023 20:38:24</publishTime>
     </File>
     <File Include="Donations_App.runtimeconfig.json">
-      <publishTime>02/08/2023 22:24:54</publishTime>
+      <publishTime>02/23/2023 23:10:01</publishTime>
     </File>
     <File Include="MailKit.dll">
       <publishTime>01/28/2023 22:29:18</publishTime>
@@ -70,7 +70,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/01/2022 06:17:10</publishTime>
     </File>
     <File Include="Microsoft.Bcl.AsyncInterfaces.dll">
-      <publishTime>04/15/2020 00:39:12</publishTime>
+      <publishTime>10/19/2020 20:47:56</publishTime>
     </File>
     <File Include="Microsoft.Data.SqlClient.dll">
       <publishTime>10/08/2022 01:35:52</publishTime>
@@ -165,6 +165,15 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Newtonsoft.Json.dll">
       <publishTime>11/24/2022 04:10:26</publishTime>
     </File>
+    <File Include="NgrokApi.dll">
+      <publishTime>04/11/2022 21:31:28</publishTime>
+    </File>
+    <File Include="NgrokAspNetCore.Lib.dll">
+      <publishTime>01/21/2019 19:14:32</publishTime>
+    </File>
+    <File Include="RestSharp.dll">
+      <publishTime>11/19/2022 18:12:36</publishTime>
+    </File>
     <File Include="Swashbuckle.AspNetCore.Swagger.dll">
       <publishTime>10/16/2021 14:54:10</publishTime>
     </File>
@@ -211,7 +220,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/25/2023 21:35:22</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>02/14/2023 11:43:53</publishTime>
+      <publishTime>03/15/2023 20:38:25</publishTime>
+    </File>
+    <File Include="wwwroot/CategoryImages/Milion.jpeg">
+      <publishTime>02/14/2023 16:17:09</publishTime>
+    </File>
+    <File Include="wwwroot/Images/Milion.jpeg">
+      <publishTime>02/05/2023 11:05:46</publishTime>
     </File>
     <File Include="wwwroot/PatientCaseImages/finalclass.drawio %282%29.png">
       <publishTime>11/23/2022 00:38:29</publishTime>

@@ -54,7 +54,8 @@ namespace Donations_App.Repositories.CartItemServices
                 };
             }
             var items = await _context.CartItems.Where(e => e.CartId == cartId).ToListAsync();
-            
+            if(items.Any())
+            {
                 foreach (var ex in items)
                 {
                     _context.CartItems.Remove(ex);
@@ -65,6 +66,13 @@ namespace Donations_App.Repositories.CartItemServices
                     Success = true,
                     Message = "Successfully Deleted Items"
                 };
+            }
+            return new GeneralRetDto
+            {
+                Success = true,
+                Message = "No Items Founded In Cart"
+            };
+
         }
 
         public async Task<GeneralRetDto> DeleteItem(int ItemId)
@@ -95,20 +103,30 @@ namespace Donations_App.Repositories.CartItemServices
             {
                 return null;
             }
-            var Item = await _context.CartItems.Include(c => c.PatientCase).SingleOrDefaultAsync(r => r.Id == ItemId);
+            var Item = await _context.CartItems.Include(c => c.PatientCase).Include(c => c.PatientCase.Category).SingleOrDefaultAsync(r => r.Id == ItemId);
             return Item;
 
         }
 
-        public async Task<IEnumerable<CartItem>> GetItems(int CartId)
+        public async Task<ItemsCartDto> GetItems(int CartId)
         {
+            double total = 0;
             var IsExist = await _context.Carts.FindAsync(CartId);
             if(IsExist==null)
             {
                 return null;
             }
-            var Items = await _context.CartItems.Include(c => c.PatientCase).Where(o => o.CartId == CartId).ToListAsync();
-            return Items;
+            var Items = await _context.CartItems.Include(c => c.PatientCase).Include(c=> c.PatientCase.Category).Where(o => o.CartId == CartId).ToListAsync();
+            foreach (var Item in Items)
+            {
+                total += Item.setAmount;
+            };
+            return new ItemsCartDto
+            {
+                Items = Items,
+                Count = Items.Count(),
+                Total = total
+            };
         }
 
         public async Task<GeneralRetDto> UpdateAmount(UpdateAmountDto dto)

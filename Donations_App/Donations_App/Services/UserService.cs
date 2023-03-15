@@ -123,9 +123,39 @@ namespace Donations_App.Services
             };
             await _context.Carts.AddAsync(addCart);
             _context.SaveChanges();
+
+            // ---------------------Send Welcome Mail To User------------------------------------------------------
+
+            var filePath = $"{Directory.GetCurrentDirectory()}\\Templates\\EmailTemplate.html";
+            var str = new StreamReader(filePath);
+            var mailBody = str.ReadToEnd();
+            str.Close();
+            mailBody = mailBody.Replace("[username]", user.FullName).Replace("[email]", user.Email);
+            var Sendmail = await _mailingService.SendEmailAsync(user.Email, "Welcome to our website ", mailBody);
+            //----------------------------------------------------------------------------------------------------------------
+            if (Sendmail.Success)
+            {
+                return new AuthModel
+                {
+                    Message = "User Registered successfully ",
+                    Id = user.Id,
+                    Email = user.Email,
+                    FullName = user.FullName,
+                    Username = user.UserName,
+                    CartId = user.Cart.Id,
+                    ExpireOn = jwtSecurityToken.ValidTo,
+                    IsAuthenticated = true,
+                    Roles = new List<string> { "User" },
+                    Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                    RefreshToken = refreshToken.Token,
+                    RefreshTokenExpiration = refreshToken.ExpiresOn
+
+                };
+
+            }
             return new AuthModel
             {
-                Message = "User Registered successfully ",
+                Message = Sendmail.Message,
                 Id = user.Id,
                 Email = user.Email,
                 FullName = user.FullName,
@@ -139,49 +169,22 @@ namespace Donations_App.Services
                 RefreshTokenExpiration = refreshToken.ExpiresOn
 
             };
+            //return new AuthModel
+            //{
+            //    Message = "User Registered successfully ",
+            //    Id = user.Id,
+            //    Email = user.Email,
+            //    FullName = user.FullName,
+            //    Username = user.UserName,
+            //    CartId = user.Cart.Id,
+            //    ExpireOn = jwtSecurityToken.ValidTo,
+            //    IsAuthenticated = true,
+            //    Roles = new List<string> { "User" },
+            //    Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+            //    RefreshToken = refreshToken.Token,
+            //    RefreshTokenExpiration = refreshToken.ExpiresOn
 
-           // var filePath = $"{Directory.GetCurrentDirectory()}\\Templates\\EmailTemplate.html";
-           // var str = new StreamReader(filePath);
-           // var mailText = str.ReadToEnd();
-           // str.Close();
-           // mailText = mailText.Replace("[username]", user.FullName).Replace("[email]", user.Email);
-           //var Sendmail = await _mailingService.SendEmailAsync(user.Email, "Welcome to our website ", mailText);
-           // if(Sendmail.Success)
-           // {
-           //     return new AuthModel
-           //     {
-           //         Message = "User Registered successfully ",
-           //         Id = user.Id,
-           //         Email = user.Email,
-           //         FullName = user.FullName,
-           //         Username = user.UserName,
-           //         CartId = user.Cart.Id,
-           //         ExpireOn = jwtSecurityToken.ValidTo,
-           //         IsAuthenticated = true,
-           //         Roles = new List<string> { "User" },
-           //         Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-           //         RefreshToken = refreshToken.Token,
-           //         RefreshTokenExpiration = refreshToken.ExpiresOn
-
-           //     };
-
-           // }
-           // return new AuthModel
-           // {
-           //     Message = Sendmail.Message,
-           //     Id = user.Id,
-           //     Email = user.Email,
-           //     FullName = user.FullName,
-           //     Username = user.UserName,
-           //     CartId = user.Cart.Id,
-           //     ExpireOn = jwtSecurityToken.ValidTo,
-           //     IsAuthenticated = true,
-           //     Roles = new List<string> { "User" },
-           //     Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-           //     RefreshToken = refreshToken.Token,
-           //     RefreshTokenExpiration = refreshToken.ExpiresOn
-
-           // };
+            //};
 
         }
 
@@ -239,6 +242,8 @@ namespace Donations_App.Services
             return new UpdateProfileDto
             {
                 FullName = user.FullName,
+                Email = user.Email,
+                UserName = user.UserName,
                 PhoneNumber = user.PhoneNumber,
                 Address = user.Address,
             };
@@ -251,6 +256,8 @@ namespace Donations_App.Services
             if (user != null)
             {
                 user.FullName = upProfile.FullName;
+                user.Email = upProfile.Email;
+                user.UserName = upProfile.UserName;
                 user.PhoneNumber = upProfile.PhoneNumber;
                 user.Address = upProfile.Address;
                 var result = await _userManager.UpdateAsync(user);
@@ -320,18 +327,26 @@ namespace Donations_App.Services
             Random rnd = new Random();
             var randomNum = (rnd.Next(100000, 999999)).ToString();
             string message = "Hi " + user.UserName+ " your verify code is " + randomNum;
-            await _mailingService.SendEmailAsync(user.Email, "Verify Email", message, null);
-            var Vcode = new VerifyCode
+            var result=await _mailingService.SendEmailAsync(user.Email, "Verify Email ", message, null);
+            if(result.Success)
             {
-                Code = randomNum,
-                UserId = user.Id,
-            };
-            await _context.VerifyCodes.AddAsync(Vcode);
-            _context.SaveChanges();
+                var Vcode = new VerifyCode
+                {
+                    Code = randomNum,
+                    UserId = user.Id,
+                };
+                await _context.VerifyCodes.AddAsync(Vcode);
+                _context.SaveChanges();
+                return new GeneralRetDto
+                {
+                    Success = true,
+                    Message = "Verify code sent to the email successfully !!",
+                };
+            }
             return new GeneralRetDto
             {
-                Success = true,
-                Message = "Verify code sent to the email successfully !!",
+                Success = false,
+                Message = "email is not real !!",
             };
         }
 

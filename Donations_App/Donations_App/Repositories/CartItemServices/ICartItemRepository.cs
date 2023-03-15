@@ -6,7 +6,7 @@ namespace Donations_App.Repositories.CartItemServices
 {
     public interface ICartItemRepository
     {
-        Task<IEnumerable<CartItem>> GetItems(int CartId);
+        Task<ItemsCartDto> GetItems(int CartId);
         Task<GeneralRetDto> AddItem(CartItemAddDto cartItemAdd);
         Task<GeneralRetDto> UpdateAmount(UpdateAmountDto dto);
         Task<GeneralRetDto> DeleteItem(int ItemId);

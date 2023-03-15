@@ -6,26 +6,36 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Donations_App.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
+    
     public class PatientCaseController : ControllerBase
     {
         private readonly IPatientCaseRepository _patientCaseRepository;
-        private new List<string> _allowedExtenstions = new List<string> { ".jpeg" , ".webp" };
+        private new List<string> _allowedExtenstions = new List<string> { ".jpeg" , ".webp" ,".svg" };
         public PatientCaseController(IPatientCaseRepository patientCaseRepository)
         {
             _patientCaseRepository = patientCaseRepository;
         }
-        [HttpGet("GetAllPatientsCases")]
+        
+        [HttpGet("GetAllPatientsCases/{page=0}/{limit=0}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int page =0 , int limit = 0)
         {
-            var Cases = await _patientCaseRepository.GetAllPatientsCases();
+            var Cases = await _patientCaseRepository.GetAllPatientsCases(page , limit);
             return Ok(Cases);
         }
 
+        [HttpGet("Completed_Cases/{page=0}/{limit=0}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CompletedPatientsCases(int page = 0, int limit = 0)
+        {
+            var Cases = await _patientCaseRepository.CompletedPatientsCases(page , limit);
+            return Ok(Cases);
+        }
         [HttpGet("GetPatientCaseByID/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetById (int id)
         {
             var result = await _patientCaseRepository.GetPatientCaseByID(id);
@@ -36,7 +46,9 @@ namespace Donations_App.Controllers
             return Ok(result);
         }
 
+        
         [HttpGet("GetByCategoryId/{categoryId}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByCategoryId(int categoryId)
         {
             var Cases = await _patientCaseRepository.GetByCategoryId(categoryId);
@@ -44,7 +56,6 @@ namespace Donations_App.Controllers
 
         }
 
-        
         [HttpPost("CreatePatientCase")]
         public async Task<IActionResult> AddPatientCase([FromForm]PatientCaseDto dto)
         {
@@ -74,7 +85,23 @@ namespace Donations_App.Controllers
             return NotFound(result);
         }
 
-        
+        //[Authorize]
+        //[HttpPut("IncreamentAmountPaid")]
+        //public async Task<IActionResult> IncreamentAmountPaid(IncreamentAmountDto dto)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var result = await _patientCaseRepository.IncreamentAmountPaid(dto);
+        //        if (result.Success)
+        //        {
+        //            return Ok(result);
+        //        }
+        //        return NotFound(result);
+        //    }
+        //    return BadRequest(ModelState);
+        //}
+
+
         [HttpPut("UpdatePatientCase/{id}")]
         public async Task<IActionResult> UpdatePatientCase(int id, [FromForm]PatientCaseDto dto)
         {

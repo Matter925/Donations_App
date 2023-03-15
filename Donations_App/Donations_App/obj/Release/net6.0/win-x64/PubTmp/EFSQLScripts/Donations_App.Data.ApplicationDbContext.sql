@@ -648,3 +648,382 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230225193953_AddOrder')
+BEGIN
+    CREATE TABLE [Orders] (
+        [Id] int NOT NULL IDENTITY,
+        [PaymentId] nvarchar(max) NOT NULL,
+        [PaymentStatus] nvarchar(max) NOT NULL,
+        CONSTRAINT [PK_Orders] PRIMARY KEY ([Id])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230225193953_AddOrder')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230225193953_AddOrder', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230225203628_ModifyOrderv1')
+BEGIN
+    DECLARE @var6 sysname;
+    SELECT @var6 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Orders]') AND [c].[name] = N'PaymentStatus');
+    IF @var6 IS NOT NULL EXEC(N'ALTER TABLE [Orders] DROP CONSTRAINT [' + @var6 + '];');
+    ALTER TABLE [Orders] ALTER COLUMN [PaymentStatus] bit NOT NULL;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230225203628_ModifyOrderv1')
+BEGIN
+    DECLARE @var7 sysname;
+    SELECT @var7 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Orders]') AND [c].[name] = N'PaymentId');
+    IF @var7 IS NOT NULL EXEC(N'ALTER TABLE [Orders] DROP CONSTRAINT [' + @var7 + '];');
+    ALTER TABLE [Orders] ALTER COLUMN [PaymentId] int NOT NULL;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230225203628_ModifyOrderv1')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230225203628_ModifyOrderv1', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230226100503_ModifyOrderUser')
+BEGIN
+    EXEC sp_rename N'[Orders].[PaymentStatus]', N'OrderStatus', N'COLUMN';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230226100503_ModifyOrderUser')
+BEGIN
+    EXEC sp_rename N'[Orders].[PaymentId]', N'PaymentOrderId', N'COLUMN';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230226100503_ModifyOrderUser')
+BEGIN
+    ALTER TABLE [Orders] ADD [OrderDate] datetime2 NOT NULL DEFAULT '0001-01-01T00:00:00.0000000';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230226100503_ModifyOrderUser')
+BEGIN
+    ALTER TABLE [Orders] ADD [TotalAmount] float NOT NULL DEFAULT 0.0E0;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230226100503_ModifyOrderUser')
+BEGIN
+    ALTER TABLE [Orders] ADD [UserId] nvarchar(max) NOT NULL DEFAULT N'';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230226100503_ModifyOrderUser')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230226100503_ModifyOrderUser', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230226124530_ModifyOrderModelV3')
+BEGIN
+    ALTER TABLE [Orders] ADD [CartId] int NOT NULL DEFAULT 0;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230226124530_ModifyOrderModelV3')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230226124530_ModifyOrderModelV3', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230226125015_ModifyOrderModelV4')
+BEGIN
+    DECLARE @var8 sysname;
+    SELECT @var8 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Orders]') AND [c].[name] = N'UserId');
+    IF @var8 IS NOT NULL EXEC(N'ALTER TABLE [Orders] DROP CONSTRAINT [' + @var8 + '];');
+    ALTER TABLE [Orders] DROP COLUMN [UserId];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230226125015_ModifyOrderModelV4')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230226125015_ModifyOrderModelV4', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227092904_addOrderItemsandModifyOrder')
+BEGIN
+    ALTER TABLE [Orders] ADD [UserId] nvarchar(max) NOT NULL DEFAULT N'';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227092904_addOrderItemsandModifyOrder')
+BEGIN
+    CREATE TABLE [OrderItem] (
+        [Id] int NOT NULL IDENTITY,
+        [Amount] float NOT NULL,
+        [OrderId] int NOT NULL,
+        [PatientCaseId] int NOT NULL,
+        CONSTRAINT [PK_OrderItem] PRIMARY KEY ([Id]),
+        CONSTRAINT [FK_OrderItem_Orders_OrderId] FOREIGN KEY ([OrderId]) REFERENCES [Orders] ([Id]) ON DELETE CASCADE,
+        CONSTRAINT [FK_OrderItem_PatientsCases_PatientCaseId] FOREIGN KEY ([PatientCaseId]) REFERENCES [PatientsCases] ([Id]) ON DELETE CASCADE
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227092904_addOrderItemsandModifyOrder')
+BEGIN
+    CREATE INDEX [IX_OrderItem_OrderId] ON [OrderItem] ([OrderId]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227092904_addOrderItemsandModifyOrder')
+BEGIN
+    CREATE INDEX [IX_OrderItem_PatientCaseId] ON [OrderItem] ([PatientCaseId]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227092904_addOrderItemsandModifyOrder')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230227092904_addOrderItemsandModifyOrder', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227093644_ReAddOrderItems')
+BEGIN
+    ALTER TABLE [OrderItem] DROP CONSTRAINT [FK_OrderItem_Orders_OrderId];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227093644_ReAddOrderItems')
+BEGIN
+    ALTER TABLE [OrderItem] DROP CONSTRAINT [FK_OrderItem_PatientsCases_PatientCaseId];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227093644_ReAddOrderItems')
+BEGIN
+    ALTER TABLE [OrderItem] DROP CONSTRAINT [PK_OrderItem];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227093644_ReAddOrderItems')
+BEGIN
+    EXEC sp_rename N'[OrderItem]', N'OrderItems';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227093644_ReAddOrderItems')
+BEGIN
+    EXEC sp_rename N'[OrderItems].[IX_OrderItem_PatientCaseId]', N'IX_OrderItems_PatientCaseId', N'INDEX';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227093644_ReAddOrderItems')
+BEGIN
+    EXEC sp_rename N'[OrderItems].[IX_OrderItem_OrderId]', N'IX_OrderItems_OrderId', N'INDEX';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227093644_ReAddOrderItems')
+BEGIN
+    ALTER TABLE [OrderItems] ADD CONSTRAINT [PK_OrderItems] PRIMARY KEY ([Id]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227093644_ReAddOrderItems')
+BEGIN
+    ALTER TABLE [OrderItems] ADD CONSTRAINT [FK_OrderItems_Orders_OrderId] FOREIGN KEY ([OrderId]) REFERENCES [Orders] ([Id]) ON DELETE CASCADE;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227093644_ReAddOrderItems')
+BEGIN
+    ALTER TABLE [OrderItems] ADD CONSTRAINT [FK_OrderItems_PatientsCases_PatientCaseId] FOREIGN KEY ([PatientCaseId]) REFERENCES [PatientsCases] ([Id]) ON DELETE CASCADE;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230227093644_ReAddOrderItems')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230227093644_ReAddOrderItems', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230303073521_addOrderDetailsModel')
+BEGIN
+    CREATE TABLE [OrdersDetails] (
+        [Id] int NOT NULL IDENTITY,
+        [TransactionId] int NOT NULL,
+        [PaymentOrderId] int NOT NULL,
+        [OrderId] int NOT NULL,
+        CONSTRAINT [PK_OrdersDetails] PRIMARY KEY ([Id]),
+        CONSTRAINT [FK_OrdersDetails_Orders_OrderId] FOREIGN KEY ([OrderId]) REFERENCES [Orders] ([Id]) ON DELETE CASCADE
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230303073521_addOrderDetailsModel')
+BEGIN
+    CREATE INDEX [IX_OrdersDetails_OrderId] ON [OrdersDetails] ([OrderId]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230303073521_addOrderDetailsModel')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230303073521_addOrderDetailsModel', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230303074135_ModifyOrderDetails')
+BEGIN
+    DROP INDEX [IX_OrdersDetails_OrderId] ON [OrdersDetails];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230303074135_ModifyOrderDetails')
+BEGIN
+    CREATE UNIQUE INDEX [IX_OrdersDetails_OrderId] ON [OrdersDetails] ([OrderId]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230303074135_ModifyOrderDetails')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230303074135_ModifyOrderDetails', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230303084051_deleteOrderDetailsModel')
+BEGIN
+    DROP TABLE [OrdersDetails];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230303084051_deleteOrderDetailsModel')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230303084051_deleteOrderDetailsModel', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230305134736_changeRequestStaus')
+BEGIN
+    DECLARE @var9 sysname;
+    SELECT @var9 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Requests]') AND [c].[name] = N'Accepted');
+    IF @var9 IS NOT NULL EXEC(N'ALTER TABLE [Requests] DROP CONSTRAINT [' + @var9 + '];');
+    ALTER TABLE [Requests] DROP COLUMN [Accepted];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230305134736_changeRequestStaus')
+BEGIN
+    DECLARE @var10 sysname;
+    SELECT @var10 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Requests]') AND [c].[name] = N'Rejected');
+    IF @var10 IS NOT NULL EXEC(N'ALTER TABLE [Requests] DROP CONSTRAINT [' + @var10 + '];');
+    ALTER TABLE [Requests] DROP COLUMN [Rejected];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230305134736_changeRequestStaus')
+BEGIN
+    ALTER TABLE [Requests] ADD [RequestStatus] nvarchar(max) NOT NULL DEFAULT N'wait';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230305134736_changeRequestStaus')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230305134736_changeRequestStaus', N'7.0.2');
+END;
+GO
+
+COMMIT;
+GO
+

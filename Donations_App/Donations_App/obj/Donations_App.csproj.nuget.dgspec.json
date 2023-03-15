@@ -92,6 +92,18 @@
               "target": "Package",
               "version": "[1.0.2, )"
             },
+            "Ngrok.AspNetCore": {
+              "target": "Package",
+              "version": "[1.0.6, )"
+            },
+            "NgrokApi": {
+              "target": "Package",
+              "version": "[0.8.0, )"
+            },
+            "RestSharp": {
+              "target": "Package",
+              "version": "[108.0.3, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"
@@ -107,6 +119,10 @@
             "Twilio": {
               "target": "Package",
               "version": "[6.2.2, )"
+            },
+            "freemail.js": {
+              "target": "Package",
+              "version": "[1.0.1, )"
             }
           },
           "imports": [

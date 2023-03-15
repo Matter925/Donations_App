@@ -18,5 +18,10 @@ namespace Donations_App.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<PatientCase> PatientsCases { get; set; }
         public DbSet<Request> Requests { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+       // public DbSet<OrderDetails> OrdersDetails { get; set; }
+
     }
 }

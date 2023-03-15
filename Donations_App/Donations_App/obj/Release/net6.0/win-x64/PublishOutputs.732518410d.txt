@@ -43,6 +43,9 @@ E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\win-x64\Pub
 E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\win-x64\PubTmp\Out\MimeKit.dll
 E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\win-x64\PubTmp\Out\Newtonsoft.Json.dll
 E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\win-x64\PubTmp\Out\Newtonsoft.Json.Bson.dll
+E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\win-x64\PubTmp\Out\NgrokAspNetCore.Lib.dll
+E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\win-x64\PubTmp\Out\NgrokApi.dll
+E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\win-x64\PubTmp\Out\RestSharp.dll
 E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\win-x64\PubTmp\Out\Swashbuckle.AspNetCore.Swagger.dll
 E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\win-x64\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerGen.dll
 E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\win-x64\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerUI.dll

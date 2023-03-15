@@ -14,7 +14,7 @@ namespace Donations_App.Repositories.FileUploadedServices
             string Pathcom = Path.Combine("//CategoryImages/", file.FileName);
             //string HostUrl = "http://MBrother.somee.com";
             string HostUrl = "https://localhost:7038";
-            //string HostUrl = "http://mohamed925-001-site1.etempurl.com";
+           // string HostUrl = "http://mohamed925-001-site1.etempurl.com";
             string PathImage = HostUrl + Pathcom;
 
             string filePathImage = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/CategoryImages/", file.FileName);

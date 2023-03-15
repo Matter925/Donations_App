@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "iBJ9S778oOa1TdWy7eKnllGlem/cXmJqcgmS5P9qdqI=",
+  "Hash": "1YFCiY/M2DLldjnCQJ/pA09K06iiq0yv1ywcy18cyuk=",
   "Source": "Donations_App",
   "BasePath": "_content/Donations_App",
   "Mode": "Default",
@@ -16,6 +16,40 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\CategoryImages\\Milion.jpeg",
+      "SourceId": "Donations_App",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\",
+      "BasePath": "_content/Donations_App",
+      "RelativePath": "CategoryImages/Milion.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\CategoryImages\\Milion.jpeg"
+    },
+    {
+      "Identity": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\Images\\Milion.jpeg",
+      "SourceId": "Donations_App",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\",
+      "BasePath": "_content/Donations_App",
+      "RelativePath": "Images/Milion.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\Milion.jpeg"
+    },
     {
       "Identity": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\PatientCaseImages\\finalclass.drawio (2).png",
       "SourceId": "Donations_App",

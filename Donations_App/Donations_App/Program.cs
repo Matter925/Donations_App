@@ -15,6 +15,8 @@ using Donations_App.Repositories.CartItemServices;
 
 using Donations_App.Repositories.FileUploadedServices;
 using Donations_App.Repositories.RequestServices;
+using Donations_App.Repositories.OrderServices;
+using Donations_App.Repositories.OrderItemsServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,18 +31,25 @@ builder.Services.AddScoped<IPatientCaseRepository, PatientCaseRepository>();
 builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();
 builder.Services.AddScoped<IFileUploadedService, FileUploadedService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderItemsRepository, OrderItemsRepository>();
 
 
 
 
 //-----------------------------------------------------------------------------------------------------------------------
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.Configure<PaymentSettings>(builder.Configuration.GetSection("PaymentSettings"));
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+}); 
 
 
 builder.Services.AddAuthentication(f =>
@@ -65,11 +74,6 @@ builder.Services.AddAuthentication(f =>
 
 });
 
-
-
-
-builder.Services.AddControllers().AddJsonOptions(options =>
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())); 
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCors();

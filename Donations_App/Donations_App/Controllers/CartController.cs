@@ -57,7 +57,7 @@ namespace Donations_App.Controllers
             return BadRequest(ModelState);
         }
 
-        [HttpPost("UpdateAmount")]
+        [HttpPut("UpdateAmount")]
         public async Task<IActionResult> UpdateAmountItem(UpdateAmountDto dto)
         {
             if(ModelState.IsValid)

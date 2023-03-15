@@ -18,12 +18,12 @@ namespace Donations_App.Repositories.PatientCaseServices
             _fileUploadedService = fileUploadedService;
         }
 
-        public async Task<IEnumerable<PatientCase>> GetAllPatientsCases()
+        public async Task<CaseResponse> GetAllPatientsCases(int page  , int limit)
         {
-            var cases = await _context.PatientsCases.OrderBy(o => o.Name).Include(m => m.Category).ToListAsync();
-            if(cases != null)
+            var AllCases = await _context.PatientsCases.OrderBy(o => o.Name).Include(m => m.Category).ToListAsync();
+           if(AllCases != null)
             {
-                foreach (var item in cases)
+                foreach (var item in AllCases)
                 {
                     if (item.AmountPaid == item.Amount)
                     {
@@ -32,9 +32,28 @@ namespace Donations_App.Repositories.PatientCaseServices
                         await _context.SaveChangesAsync();
                     }
                 }
-            }    
-            
-            return cases;
+            }
+
+            if (page == 0 && limit ==0)
+            {
+                 AllCases = await _context.PatientsCases.OrderBy(o => o.Name).Include(m => m.Category).Where(c => c.IsComplete != true).ToListAsync();
+                return new CaseResponse
+                {
+                    patientCases = AllCases,
+
+                };
+            }
+            var pageResult = limit * (1f);
+            var pageCount =Math.Ceiling(_context.PatientsCases.Count() / pageResult);
+            var cases = await _context.PatientsCases
+                .Skip((page - 1) * (int)pageResult)
+                .Take((int)pageResult)
+                .OrderBy(o => o.Name).Include(m => m.Category).Where(c=>c.IsComplete != true).ToListAsync();
+            return new CaseResponse{
+                patientCases = cases,
+                CurrentPage = page,
+                Pages =(int)pageCount
+            };
        
         }
         public async Task<PatientCase> GetPatientCaseByID(int id)
@@ -107,7 +126,7 @@ namespace Donations_App.Repositories.PatientCaseServices
 
         public async Task<GeneralRetDto> UpdatePatientCase(int id,PatientCaseDto dto)
         {
-            var paient = await _context.PatientsCases.Include(c=> c.Category).SingleOrDefaultAsync(p=>p.Id == id);
+            var paient = await _context.PatientsCases.FindAsync(id);
             if (paient == null)
             {
                 return new GeneralRetDto
@@ -133,5 +152,78 @@ namespace Donations_App.Repositories.PatientCaseServices
                 Message = "Successfully Updated",
             };
         }
+
+        public async Task<GeneralRetDto> IncreamentAmountPaid(int CartId)
+        {
+            var items = await _context.CartItems.Where(c=>c.CartId== CartId).ToListAsync();
+            if (items == null)
+            {
+                return new GeneralRetDto
+                {
+                    Success = false,
+                    Message = "",
+                };
+            }
+            foreach(var item in items)
+            {
+                var paient =await _context.PatientsCases.FindAsync(item.PatientCaseId);
+                paient.AmountPaid += item.setAmount;
+                _context.PatientsCases.Update(paient);
+                _context.SaveChanges();
+            }
+            return new GeneralRetDto
+            {
+                Success = true,
+                Message = "Successfully Increament",
+            };
+        }
+
+        public async Task<CaseResponse> CompletedPatientsCases(int page, int limit)
+        {
+            var AllCases = await _context.PatientsCases.OrderBy(o => o.Name).Include(m => m.Category).ToListAsync();
+            if (AllCases != null)
+            {
+                foreach (var item in AllCases)
+                {
+                    if (item.AmountPaid == item.Amount)
+                    {
+                        item.IsComplete = true;
+                        _context.PatientsCases.Update(item);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+
+            if (page == 0 && limit == 0)
+            {
+                AllCases = await _context.PatientsCases.OrderBy(o => o.Name).Include(m => m.Category).Where(c=>c.IsComplete == true).ToListAsync();
+                return new CaseResponse
+                {
+                    patientCases = AllCases,
+
+                };
+            }
+            var pageResult = limit * (1f);
+            var pageCount = Math.Ceiling(_context.PatientsCases.Count() / pageResult);
+            var cases = await _context.PatientsCases
+                .Skip((page - 1) * (int)pageResult)
+                .Take((int)pageResult)
+                .OrderBy(o => o.Name).Include(m => m.Category).Where(c => c.IsComplete == true).ToListAsync();
+            return new CaseResponse
+            {
+                patientCases = cases,
+                CurrentPage = page,
+                Pages = (int)pageCount
+            };
+
+        }
+
+        //public async Task<IEnumerable<PatientCase>> Search(string text)
+        //{
+        //    text = text.ToLower();
+        //    var result = _context.PatientsCases.Where(c=>c.Name.ToLower().Contains(text)||c.Description.ToLower().Contains(text)).ToList();
+        //}
+
+
     }
 }

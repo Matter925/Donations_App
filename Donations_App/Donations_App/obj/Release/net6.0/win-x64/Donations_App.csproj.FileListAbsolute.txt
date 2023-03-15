@@ -80,3 +80,6 @@ E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\win-x64\Don
 E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\win-x64\ref\Donations_App.dll
 E:\Level 4\GP\Project\Donations_App\Donations_App\bin\Release\net6.0\win-x64\Twilio.dll
 E:\Level 4\GP\Project\Donations_App\Donations_App\bin\Release\net6.0\win-x64\Donations_App.staticwebassets.runtime.json
+E:\Level 4\GP\Project\Donations_App\Donations_App\bin\Release\net6.0\win-x64\NgrokAspNetCore.Lib.dll
+E:\Level 4\GP\Project\Donations_App\Donations_App\bin\Release\net6.0\win-x64\NgrokApi.dll
+E:\Level 4\GP\Project\Donations_App\Donations_App\bin\Release\net6.0\win-x64\RestSharp.dll
