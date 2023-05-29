@@ -8,5 +8,6 @@ namespace Donations_App.Repositories.OrderItemsServices
     {
         Task<GeneralRetDto> CreateOrderItems(int PaymentOrderId);
         Task<IEnumerable<OrderItem>> GetItemsByOrderID(int OrderId);
+        Task<IEnumerable<OrderItem>> GetItems();
     }
 }

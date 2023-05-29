@@ -18,6 +18,7 @@ using Donations_App.Data;
 using Donations_App.Dtos.UserDto;
 using DonationsApp.Models;
 using Donations_App.Dtos.ReturnDto;
+using Donations_App.Dtos.RequestDtos;
 
 namespace Donations_App.Services
 {
@@ -126,12 +127,12 @@ namespace Donations_App.Services
 
             // ---------------------Send Welcome Mail To User------------------------------------------------------
 
-            var filePath = $"{Directory.GetCurrentDirectory()}\\Templates\\EmailTemplate.html";
-            var str = new StreamReader(filePath);
-            var mailBody = str.ReadToEnd();
-            str.Close();
-            mailBody = mailBody.Replace("[username]", user.FullName).Replace("[email]", user.Email);
-            var Sendmail = await _mailingService.SendEmailAsync(user.Email, "Welcome to our website ", mailBody);
+            //var filePath = $"{Directory.GetCurrentDirectory()}\\Templates\\EmailTemplate.html";
+            //var str = new StreamReader(filePath);
+            //var mailBody = str.ReadToEnd();
+            //str.Close();
+            //mailBody = mailBody.Replace("[username]", user.FullName).Replace("[email]", user.Email);
+            var Sendmail = await _mailingService.SendEmailAsync(user.Email, "Welcome to our website ", "Welcom");
             //----------------------------------------------------------------------------------------------------------------
             if (Sendmail.Success)
             {
@@ -251,8 +252,11 @@ namespace Donations_App.Services
 
         public async Task<AuthModel> UpdateProfile(string email, UpdateProfileDto upProfile)
         {
+
             var authModel = new AuthModel();
             var user = await _userManager.FindByEmailAsync(email);
+            var rolesList = await _userManager.GetRolesAsync(user);
+            var CartUser = await _context.Carts.SingleOrDefaultAsync(c => c.UserId == user.Id);
             if (user != null)
             {
                 user.FullName = upProfile.FullName;
@@ -277,16 +281,15 @@ namespace Donations_App.Services
                 user.RefreshTokens.Add(refreshToken);
                 await _userManager.UpdateAsync(user);
                 authModel.Message = "Profile Updated  Successfully ";
+                authModel.IsAuthenticated = true;
                 authModel.Id = user.Id;
                 authModel.FullName = user.FullName;
                 authModel.Email = user.Email;
                 authModel.Username = user.UserName;
-                authModel.IsAuthenticated = true;
-
-                authModel.ExpireOn = jwtSecurityToken.ValidTo;
-
-                authModel.Roles = new List<string> { "User" };
+                
+                authModel.Roles = rolesList.ToList();
                 authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+                authModel.ExpireOn = jwtSecurityToken.ValidTo;
                 authModel.RefreshToken = refreshToken.Token;
                 authModel.RefreshTokenExpiration = refreshToken.ExpiresOn;
                 return authModel;
@@ -295,20 +298,32 @@ namespace Donations_App.Services
             return null;
         }
 
-        public async Task<GetUserDto> GetUser(string email)
+        public async Task<GetUserDto> GetUser(GetUserData dto)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null)
-                return new GetUserDto { isNotNull = false };
+                return new GetUserDto { Success = false };
+            var jwtSecurityToken = await CreateJwtToken(user);
+            var refreshToken = GenerateRefreshToken();
+             user.RefreshTokens.Add(refreshToken);
+            await _userManager.UpdateAsync(user);
+            var rolesList = await _userManager.GetRolesAsync(user);
+            var CartUser = await _context.Carts.SingleOrDefaultAsync(c => c.UserId == user.Id);
             return new GetUserDto
             {
-                isNotNull = true,
+                Success = true,
                 Id = user.Id,
                 Email = user.Email,
                 FullName = user.FullName,
                 Username = user.UserName,
                 PhoneNumber = user.PhoneNumber,
                 Address = user.Address,
+                CartId = CartUser.Id,
+                Roles = rolesList.ToList(),
+                Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                ExpireOn = jwtSecurityToken.ValidTo,
+                RefreshToken = refreshToken.Token,
+                RefreshTokenExpiration = refreshToken.ExpiresOn
             };
 
 
@@ -326,8 +341,8 @@ namespace Donations_App.Services
 
             Random rnd = new Random();
             var randomNum = (rnd.Next(100000, 999999)).ToString();
-            string message = "Hi " + user.UserName+ " your verify code is " + randomNum;
-            var result=await _mailingService.SendEmailAsync(user.Email, "Verify Email ", message, null);
+            string message = "Hi " + user.UserName+ " Your Poe verification code is: " + randomNum;
+            var result=await _mailingService.SendEmailAsync(user.Email, "Your verification code ", message, null);
             if(result.Success)
             {
                 var Vcode = new VerifyCode
@@ -383,7 +398,7 @@ namespace Donations_App.Services
 
         public async Task<RestTokenDto> VerifyCodeAsync(VerifyCodeDto codeDto)
         {
-            var user = await _userManager.FindByEmailAsync(codeDto.email);
+            var user = await _userManager.FindByEmailAsync(codeDto.Email);
             if (user == null)
             {
                 return new RestTokenDto {
@@ -391,16 +406,18 @@ namespace Donations_App.Services
                     Message = "Email Incorrect or not found" 
                 };
             };
-            var result = await _context.VerifyCodes.SingleOrDefaultAsync(r => r.UserId == user.Id);
-            if (result.Code == codeDto.Code)
-            {
+            var result = await _context.VerifyCodes.Where(c=>c.UserId== user.Id  && c.Code == codeDto.Code).SingleOrDefaultAsync();
+            
+
+            if (result != null)
+            { 
                 _context.VerifyCodes.Remove(result);
                 _context.SaveChanges();
 
                 var restToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                 return new RestTokenDto
                 {
-                    Success = true ,
+                    Success = true,
                     Message = "Successfully Verify Code",
                     RestToken = restToken
                 };
@@ -486,6 +503,45 @@ namespace Donations_App.Services
             return result;
         }
 
+        public async Task<GetAllUsers> GetAllUsers()
+        {
+           var users = await _userManager.Users.Select(u => new UserModel
+           {
+               UserId = u.Id,
+               FullName = u.FullName,
+               UserName = u.UserName,
+               Email = u.Email,
+               PhoneNumber = u.PhoneNumber,
+               Address = u.Address,
+           }).ToListAsync();
+            return new GetAllUsers
+            {
+                Users = users,
+                Count = users.Count
+            };
+        }
+
+        public async Task<UsersDetails> GetUsersDetails()
+        {
+
+            var userDetails = await _userManager.Users.Include(r => r.Requests).Select(u => new UserRequestsDto
+            {
+                FullName = u.FullName,
+                Email = u.Email,
+                Phone = u.PhoneNumber,
+                UserId = u.Id,
+                Requests = u.Requests.ToList(),
+                Count = u.Requests.Count()
+
+            }).ToListAsync();
+
+            return new UsersDetails
+            {
+                Users = userDetails,
+                CountUsers = userDetails.Count  
+            };
+
+        }
 
         // Methods Of Create Tokens-------------------------------------------------------------------------------------------------------
         private async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)
@@ -594,5 +650,6 @@ namespace Donations_App.Services
             return true;
         }
 
+        
     }
 }

@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sitemanifest>
+  <IisApp path="E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\PubTmp\Out\" />
+  <dbfullsql path="E:\Level 4\GP\Project\Donations_App\Donations_App\obj\Release\net6.0\PubTmp\EFSQLScripts\Donations_App.Data.ApplicationDbContext.sql" />
+</sitemanifest>

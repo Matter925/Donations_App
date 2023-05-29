@@ -23,6 +23,7 @@ namespace Donations_App.Controllers
         [HttpGet("Get-All-Orders")]
         public async Task<IActionResult> GetOrders()
         {
+            
             return Ok(await _orderRepository.GetAllOrders());
         }
 
@@ -35,7 +36,12 @@ namespace Donations_App.Controllers
         [HttpDelete("DeleteOrder/{OrderId}")]
         public async Task<IActionResult> DeleteOrder(int OrderId)
         {
-            return Ok(await _orderRepository.DeleteOrder(OrderId));
+            var result = await _orderRepository.DeleteOrder(OrderId);
+            if(result.Success)
+            {
+                return Ok(result);
+            }
+            return NotFound(result);
         }
     }
 }

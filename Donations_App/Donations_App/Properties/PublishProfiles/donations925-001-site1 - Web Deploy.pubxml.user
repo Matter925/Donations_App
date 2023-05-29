@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword />
+    <History>False|2023-04-15T20:19:06.5908751Z;False|2023-04-15T22:14:28.7296643+02:00;True|2023-04-15T22:11:58.0241926+02:00;</History>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Server=SQL8005.site4now.net%3bInitial Catalog=db_a97bcf_donations%3bUser Id=db_a97bcf_donations_admin%3bPassword=Matter246810</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="Donations_App.Data.ApplicationDbContext">
+      <Value>Server=SQL8005.site4now.net%3bInitial Catalog=db_a97bcf_donations%3bUser Id=db_a97bcf_donations_admin%3bPassword=Matter246810</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

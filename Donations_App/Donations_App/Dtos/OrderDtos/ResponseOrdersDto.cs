@@ -6,5 +6,6 @@ namespace Donations_App.Dtos.OrderDtos
     {
         public IEnumerable<Order> Orders { get; set; }
         public int Count { get; set; }
+        public double Total { get; set; }   
     }
 }

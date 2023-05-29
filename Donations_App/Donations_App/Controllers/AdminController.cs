@@ -19,7 +19,15 @@ namespace Donations_App.Controllers
             _userService = userService;
         }
 
-        
+       
+        [HttpGet("GetUsersDetails")]
+        public async Task<IActionResult> GetUsersDetails()
+        {
+            var requests = await _userService.GetUsersDetails();
+            return Ok(requests);
+
+        }
+
         [HttpGet("GetRoles")]
         public async Task<IActionResult> GetRoles()
         {

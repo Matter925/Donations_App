@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword />
+    <History>True|2023-04-05T20:24:40.6646335Z;True|2023-04-05T21:58:42.7065137+02:00;True|2023-04-05T21:38:15.9584820+02:00;True|2023-04-05T01:02:01.0767222+02:00;True|2023-04-04T13:45:56.1295959+02:00;True|2023-04-02T16:34:49.5818976+02:00;True|2023-03-31T22:20:32.5239646+02:00;True|2023-03-26T23:58:24.9187834+02:00;False|2023-03-26T21:20:04.1034757+02:00;False|2023-03-26T21:13:46.7123574+02:00;True|2023-03-26T20:58:39.4557286+02:00;True|2023-03-25T00:04:00.8463146+02:00;True|2023-03-24T22:18:16.2714377+02:00;True|2023-03-24T10:32:28.2183742+02:00;True|2023-03-23T19:17:52.4988991+02:00;True|2023-03-23T11:27:15.8031578+02:00;True|2023-03-23T11:13:28.9285279+02:00;False|2023-03-23T11:07:25.5822416+02:00;</History>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Server=SQL5110.site4now.net%3bInitial Catalog=db_a94a9c_mbrotherapp%3bUser Id=db_a94a9c_mbrotherapp_admin%3bPassword=mohamed925-001</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="Donations_App.Data.ApplicationDbContext">
+      <Value>Server=SQL5110.site4now.net%3bInitial Catalog=db_a94a9c_mbrotherapp%3bUser Id=db_a94a9c_mbrotherapp_admin%3bPassword=mohamed925-001</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

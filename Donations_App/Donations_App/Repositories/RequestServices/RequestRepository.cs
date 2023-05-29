@@ -59,13 +59,14 @@ namespace Donations_App.Repositories.RequestServices
         public async Task<IEnumerable<UserRequestsDto>> GetAllRequests()
         {
 
-            var userReq = await _userManager.Users.Include(r => r.Requests).Where(d => d.Requests.Any()).Select(u => new UserRequestsDto
+            var userReq = await _userManager.Users.Include(r => r.Requests).Select(u => new UserRequestsDto
             {
                 FullName = u.FullName,
                 Email = u.Email,
                 Phone = u.PhoneNumber,
                 UserId = u.Id,
                 Requests = u.Requests.ToList(),
+               Count = u.Requests.Count()
 
             }).ToListAsync();
 
@@ -73,11 +74,24 @@ namespace Donations_App.Repositories.RequestServices
 
         }
 
-        public async Task<IEnumerable<Request>> GetByUserID(string UserId)
+        public async Task<ResRequest> GetByUserID(string UserId)
         {
-            
+            var user = await _userManager.FindByIdAsync(UserId);
+            if (user == null)
+            {
+                return new ResRequest
+                {
+                    Success=false,
+
+                };
+            }
             var requests = await _context.Requests.Where(o => o.UserId == UserId).ToListAsync();
-            return requests;
+            return new ResRequest
+            {
+                Success =true,
+                Requests = requests,
+                Count = requests.Count()
+            };
         }
         public async Task<GeneralRetDto> AccepteRequest(int RequestID)
         {
@@ -147,6 +161,42 @@ namespace Donations_App.Repositories.RequestServices
         {
             var result = await _context.Requests.SingleOrDefaultAsync(c => c.Id == id);
             return result;
+        }
+
+        public async Task<ResRequest> GetAcceptedRequests(string UserId)
+        {
+            var user = await _userManager.FindByIdAsync(UserId);
+            if (user == null)
+            {
+                return new ResRequest
+                {
+                    Success = false,
+
+                };
+            }
+            var requests = await _context.Requests.Where(o => o.UserId == UserId && o.RequestStatus== "accepted").ToListAsync();
+            return new ResRequest
+            {
+                Success = true,
+                Requests = requests
+            };
+        }
+
+        public async Task<IEnumerable<UserRequestsDto>> GetWaitRequests()
+        {
+
+            var userReq = await _userManager.Users.Include(r => r.Requests).Where(d => d.Requests.Any(x=>x.RequestStatus== "wait")).Select(u => new UserRequestsDto
+            {
+                FullName = u.FullName,
+                Email = u.Email,
+                Phone = u.PhoneNumber,
+                UserId = u.Id,
+                Requests = u.Requests.Where(s=>s.RequestStatus== "wait").ToList(),
+                Count = u.Requests.Where(s => s.RequestStatus == "wait").Count()
+
+            }).ToListAsync();
+
+            return userReq;
         }
     }
 }

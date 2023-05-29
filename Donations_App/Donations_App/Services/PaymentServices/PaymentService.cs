@@ -158,7 +158,11 @@ namespace Donations_App.Services
             };
         }
 
+        //-------------------------------------------------------------------------------------------------------------
 
+        
+
+        
 
         //-----------------------------------------------------------------------------------------------------------------------------------
         private async Task<authToken> GetAuthToken(string Api_key , string URL)
@@ -260,6 +264,8 @@ namespace Donations_App.Services
         private async Task<IFramesOfPayment> CardPayment(string TokenPayment)
         {
             var iFramMasterCard = $"https://accept.paymob.com/api/acceptance/iframes/722271?payment_token={TokenPayment} ";
+
+
             var iFramVisa = $"https://accept.paymob.com/api/acceptance/iframes/722272?payment_token={TokenPayment} ";
 
             return new IFramesOfPayment

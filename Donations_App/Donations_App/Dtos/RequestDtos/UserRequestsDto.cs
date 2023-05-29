@@ -10,6 +10,8 @@ namespace Donations_App.Dtos.RequestDtos
 
         public string UserId { get; set; }
         public IEnumerable<Request> Requests { get; set; }
+
+        public int Count { get; set; }
         
     }
 }

@@ -15,6 +15,8 @@ namespace Donations_App.Repositories.PatientCaseServices
         Task<GeneralRetDto> DeletePatientCase(int id);
         Task<GeneralRetDto> IncreamentAmountPaid(int CartId);
 
-        //Task<IEnumerable<PatientCase>> Search(string text);
+        Task<CaseResponse> GetUserPatientCases(string UserId , int page, int limit);
+        Task<CaseResponse> Search(string query , int page, int limit);
+        Task<CaseResponse> Filter(FilterDto dto, int page, int limit);
     }
 }

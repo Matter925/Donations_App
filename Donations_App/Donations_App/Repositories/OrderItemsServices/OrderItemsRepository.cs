@@ -53,6 +53,12 @@ namespace Donations_App.Repositories.OrderItemsServices
             };
         }
 
+        public async Task<IEnumerable<OrderItem>> GetItems()
+        {
+            var Items = await _context.OrderItems.Include(c => c.PatientCase).Include(d => d.Order).ThenInclude(t => t.User).Where(f=>f.Order.OrderStatus ==true).ToListAsync();
+            return Items;
+        }
+
         public async Task<IEnumerable<OrderItem>> GetItemsByOrderID(int OrderId)
         {
             var IsExist = await _context.Orders.FindAsync(OrderId);

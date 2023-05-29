@@ -18,7 +18,18 @@ namespace Donations_App.Controllers
         {
             _userService = userService;
         }
+        [HttpPost("GetUserData")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetUserData(GetUserData dto)
+        {
+            var result = await _userService.GetUser(dto);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest("Email is incorrect or not found !!!");
 
+        }
         [HttpGet("GetProfileToUpdate/{email}")]
         public async Task<IActionResult> GetProfileData(string email)
         {

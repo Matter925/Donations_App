@@ -3,6 +3,7 @@ using Donations_App.Models;
 using Donations_App.Dtos.UserDto;
 using Microsoft.AspNetCore.Identity;
 using Donations_App.Dtos.ReturnDto;
+using Donations_App.Dtos.RequestDtos;
 
 namespace Donations_App.Services
 {
@@ -12,12 +13,13 @@ namespace Donations_App.Services
         Task<AuthModel> LoginAsync(LoginDto login);
         Task<AuthModel> RefreshTokenAsync(string token);
         Task<bool> RevokeTokenAsync(string token);
-
+        Task<GetAllUsers> GetAllUsers();
+        Task<UsersDetails> GetUsersDetails();
         //--------------------------------------------------------------------------
 
         Task<UpdateProfileDto> GetProfileData(string email);
         Task<AuthModel> UpdateProfile(string email, UpdateProfileDto upProfile);
-        Task<GetUserDto> GetUser(string email);
+        Task<GetUserDto> GetUser(GetUserData dto);
         Task<GeneralRetDto> ForgotPasswordAsync(string email);
         Task<RestTokenDto> VerifyCodeAsync(VerifyCodeDto codeDto);
         Task<AuthModel> ChangePassword(string email ,ChangePasswordDto model);

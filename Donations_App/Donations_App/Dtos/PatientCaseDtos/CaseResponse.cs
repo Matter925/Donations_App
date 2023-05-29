@@ -8,5 +8,6 @@ namespace Donations_App.Dtos.PatientCaseDtos
         public int CurrentPage { get; set; }
 
         public int Pages { get; set; }
+        public int Count { get; set; }
     }
 }

@@ -192,6 +192,45 @@ namespace DonationsApp.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Donations_App.Models.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("governorateId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("governorateId");
+
+                    b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("Donations_App.Models.Governorate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Governorates");
+                });
+
             modelBuilder.Entity("Donations_App.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -217,9 +256,11 @@ namespace DonationsApp.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -258,6 +299,10 @@ namespace DonationsApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("Amount")
                         .HasColumnType("float");
 
@@ -271,6 +316,9 @@ namespace DonationsApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("DonationCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("ImageName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -278,10 +326,23 @@ namespace DonationsApp.Migrations
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");
 
+                    b.Property<int>("LimitTime")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("PatientCaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Rate")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -551,9 +612,31 @@ namespace DonationsApp.Migrations
                     b.Navigation("PatientCase");
                 });
 
+            modelBuilder.Entity("Donations_App.Models.City", b =>
+                {
+                    b.HasOne("Donations_App.Models.Governorate", "governorate")
+                        .WithMany()
+                        .HasForeignKey("governorateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("governorate");
+                });
+
+            modelBuilder.Entity("Donations_App.Models.Order", b =>
+                {
+                    b.HasOne("Donations_App.Models.ApplicationUser", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Donations_App.Models.OrderItem", b =>
                 {
-                    b.HasOne("Donations_App.Models.Order", null)
+                    b.HasOne("Donations_App.Models.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -564,6 +647,8 @@ namespace DonationsApp.Migrations
                         .HasForeignKey("PatientCaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Order");
 
                     b.Navigation("PatientCase");
                 });
@@ -645,6 +730,8 @@ namespace DonationsApp.Migrations
                 {
                     b.Navigation("Cart")
                         .IsRequired();
+
+                    b.Navigation("Orders");
 
                     b.Navigation("Requests");
                 });

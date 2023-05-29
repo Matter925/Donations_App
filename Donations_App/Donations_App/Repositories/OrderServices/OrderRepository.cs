@@ -75,11 +75,18 @@ namespace Donations_App.Repositories.OrderServices
 
         public async Task<ResponseOrdersDto> GetOrderByUserId(string UserId)
         {
+            double total = 0;
             var orders = await _context.Orders.Include(c=>c.OrderItems).ThenInclude(d=>d.PatientCase).Where(o => o.UserId == UserId && o.OrderStatus==true).ToListAsync();
+            foreach (var order in orders)
+            {
+                total += order.TotalAmount;
+            }
             return new ResponseOrdersDto
             {
                 Orders = orders,
+                Total = total,
                 Count = orders.Count()
+
             };
         }
 

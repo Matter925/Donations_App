@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Donations_App.Dtos.CategoryDtos;
 using Donations_App.Repositories.CategoryServices;
 using Microsoft.AspNetCore.Authorization;
+using Donations_App.Data;
+using Donations_App.Dtos;
+using Donations_App.Models;
 
 namespace Donations_App.Controllers
 {
@@ -13,10 +16,12 @@ namespace Donations_App.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryServices _categoryServices;
+        private readonly ApplicationDbContext _context;
         private new List<string> _allowedExtenstions = new List<string> { ".jpeg", ".webp", ".svg" };
-        public CategoryController(ICategoryServices categoryServices)
+        public CategoryController(ICategoryServices categoryServices , ApplicationDbContext context)
         {
             _categoryServices = categoryServices;
+            _context = context;
         }
 
         //------------------------------------------------------------------
@@ -32,6 +37,7 @@ namespace Donations_App.Controllers
             return Ok(category);
         }
         
+
         [HttpGet("GetCategoryByID/{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetCategoryByID(int id)

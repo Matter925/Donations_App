@@ -23,5 +23,16 @@ namespace Donations_App.Controllers
         //    }
         //    return Ok(result);
         //}
+
+        [HttpGet("Get-Order-Items")]
+        public async Task<IActionResult> GetItems()
+        {
+            var result = await _orderItemsRepository.GetItems();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
     }
 }

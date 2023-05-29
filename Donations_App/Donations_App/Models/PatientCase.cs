@@ -12,6 +12,12 @@ namespace Donations_App.Models
         public double AmountPaid { get; set; }
         public string ImageName { get; set; }
         public bool IsComplete { get; set; }
+        public string Address { get; set; }
+        public DateTime PatientCaseDate { get; set; }
+        public int DonationCount { get; set; }
+        public int LimitTime { get; set; }
+        public int Rate { get; set; }
+        public string UserId { get; set; }  
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         

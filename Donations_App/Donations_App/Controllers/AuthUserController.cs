@@ -25,7 +25,17 @@ namespace Donations_App.Controllers
         {
             _userService = userService;
         }
+
         
+
+        [HttpGet("GetAllUsers")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var userCount = await _userService.GetAllUsers();
+            return Ok(userCount);
+        }
+
         [HttpPost("Register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterDto register)

@@ -48,7 +48,7 @@ namespace Donations_App.Services
             {
                 smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
                 smtp.Authenticate(_mailSettings.Username, _mailSettings.Password);
-                await smtp.SendAsync(email);
+                var send =await smtp.SendAsync(email);
                 smtp.Disconnect(true);
                 return new GeneralRetDto
                 {

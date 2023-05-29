@@ -21,7 +21,10 @@ namespace Donations_App.Data
 
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-       // public DbSet<OrderDetails> OrdersDetails { get; set; }
+
+        public DbSet<Governorate> Governorates { get; set; }
+        public DbSet<City> Cities { get; set; }
+        // public DbSet<OrderDetails> OrdersDetails { get; set; }
 
     }
 }

@@ -17,13 +17,15 @@ using Donations_App.Repositories.FileUploadedServices;
 using Donations_App.Repositories.RequestServices;
 using Donations_App.Repositories.OrderServices;
 using Donations_App.Repositories.OrderItemsServices;
+using Donations_App.Repositories.CitiesServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 
 // Add services to the container.
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>("Default");
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMailingService, MailingService>();
 builder.Services.AddScoped<ICategoryServices, CategoryServices>();
@@ -34,6 +36,7 @@ builder.Services.AddScoped<IFileUploadedService, FileUploadedService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderItemsRepository, OrderItemsRepository>();
+builder.Services.AddScoped<ICitiesService, CitiesService>();
 
 
 

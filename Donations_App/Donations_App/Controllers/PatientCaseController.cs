@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Donations_App.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
+   [Authorize]
     [ApiController]
     
     public class PatientCaseController : ControllerBase
@@ -19,17 +19,17 @@ namespace Donations_App.Controllers
             _patientCaseRepository = patientCaseRepository;
         }
         
-        [HttpGet("GetAllPatientsCases/{page=0}/{limit=0}")]
+        [HttpGet("GetAllPatientsCases/{page}/{limit}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAll(int page =0 , int limit = 0)
+        public async Task<IActionResult> GetAll(int page =1 , int limit = 0)
         {
             var Cases = await _patientCaseRepository.GetAllPatientsCases(page , limit);
             return Ok(Cases);
         }
 
-        [HttpGet("Completed_Cases/{page=0}/{limit=0}")]
+        [HttpGet("Completed_Cases/{page}/{limit}")]
         [AllowAnonymous]
-        public async Task<IActionResult> CompletedPatientsCases(int page = 0, int limit = 0)
+        public async Task<IActionResult> CompletedPatientsCases(int page = 1, int limit = 0)
         {
             var Cases = await _patientCaseRepository.CompletedPatientsCases(page , limit);
             return Ok(Cases);
@@ -56,6 +56,7 @@ namespace Donations_App.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("CreatePatientCase")]
         public async Task<IActionResult> AddPatientCase([FromForm]PatientCaseDto dto)
         {
@@ -73,7 +74,7 @@ namespace Donations_App.Controllers
             return BadRequest(ModelState);
         }
 
-        
+        [Authorize(Roles = "Admin")]
         [HttpDelete("DeletePatientCase/{id}")]
         public async Task<IActionResult> DeletePatientCase(int id)
         {
@@ -101,7 +102,7 @@ namespace Donations_App.Controllers
         //    return BadRequest(ModelState);
         //}
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("UpdatePatientCase/{id}")]
         public async Task<IActionResult> UpdatePatientCase(int id, [FromForm]PatientCaseDto dto)
         {
@@ -122,6 +123,26 @@ namespace Donations_App.Controllers
 
         }
 
+        [HttpGet("Search/{page}/{limit}/{query}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Search(string query, int page = 1, int limit = 0)
+        {
+            var Cases = await _patientCaseRepository.Search(query,page,limit);
+            return Ok(Cases);
+        }
+        [HttpPost("Filter/{page}/{limit}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Filter([FromBody]FilterDto dto, int page = 1, int limit = 0)
+        {
+            var Cases = await _patientCaseRepository.Filter(dto, page , limit );
+            return Ok(Cases);
+        }
+        [HttpGet("GetUserPatientsCases/{page}/{limit}/{UserId}")]
+        public async Task<IActionResult> GetUserPatientsCases(string UserId, int page = 1, int limit = 0)
+        {
+            var Cases = await _patientCaseRepository.GetUserPatientCases(UserId, page, limit);
+            return Ok(Cases);
+        }
 
     }
 }

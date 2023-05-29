@@ -20,6 +20,7 @@ namespace Donations_App.Models
         
         public ICollection<Request> Requests { get; set; }
         public ICollection<Order> Orders { get; set; }
+       
 
 
     }

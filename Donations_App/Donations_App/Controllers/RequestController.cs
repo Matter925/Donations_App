@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Donations_App.Controllers
 {
-    [Authorize]
+   // [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class RequestController : ControllerBase
@@ -29,11 +29,26 @@ namespace Donations_App.Controllers
         [HttpGet("GetUserRequests/{UserId}")]
         public async Task<IActionResult> GetByUserID(string UserId)
         {
-            var requests = await _requestRepository.GetByUserID(UserId);
+            var result = await _requestRepository.GetByUserID(UserId);
 
-            return Ok(requests);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return NotFound("User id is incorrect or not found !!!!");
         }
-       
+
+
+        
+        [Authorize(Roles = "Admin")]
+        [HttpGet("GetWaitRequests")]
+        public async Task<IActionResult> GetWaitRequests()
+        {
+            var result = await _requestRepository.GetWaitRequests();
+            return Ok(result);
+        }
+
         [HttpPost("ApplyRequest")]
         public async Task<IActionResult> ApplyRequest([FromForm] RequestDto dto)
         {
@@ -50,6 +65,7 @@ namespace Donations_App.Controllers
             }
             return BadRequest(ModelState);
         }
+
         [Authorize(Roles = "Admin")]
         [HttpPut("AccepteRequest/{RequestID}")]
         public async Task<IActionResult> AccepteRequest(int RequestID)
@@ -61,6 +77,7 @@ namespace Donations_App.Controllers
             }
             return NotFound(result);
         }
+
         [Authorize(Roles = "Admin")]
         [HttpPut("RejecteRequest/{RequestID}")]
         public async Task<IActionResult> RejecteRequest(int RequestID)

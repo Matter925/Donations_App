@@ -7,7 +7,9 @@ namespace Donations_App.Repositories.RequestServices
     public interface IRequestRepository
     {
         Task<IEnumerable<UserRequestsDto>> GetAllRequests();
-        Task<IEnumerable<Request>> GetByUserID(string UserId);
+        Task<ResRequest> GetByUserID(string UserId);
+        Task<ResRequest> GetAcceptedRequests(string UserId);
+        Task<IEnumerable<UserRequestsDto>> GetWaitRequests();
         Task<GeneralRetDto> CreateRequest(RequestDto Dto);
 
         Task<GeneralRetDto> AccepteRequest(int RequestID);

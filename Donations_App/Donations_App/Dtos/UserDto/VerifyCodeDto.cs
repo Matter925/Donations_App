@@ -7,7 +7,7 @@ namespace Donations_App.Dtos.UserDto
     {
         [Required]
         [EmailAddress]
-        public string email { get; set; }
+        public string Email { get; set; }
         [Required]
         public string Code { get; set; }
     }
