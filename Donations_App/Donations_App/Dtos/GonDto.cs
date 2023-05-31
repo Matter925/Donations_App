@@ -4,5 +4,6 @@
     {
         public string Name { get; set; }
         public int governorateId { get; set; }
+        
     }
 }
