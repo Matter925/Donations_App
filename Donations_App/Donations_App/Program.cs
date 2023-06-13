@@ -44,6 +44,7 @@ builder.Services.AddScoped<ICitiesService, CitiesService>();
 //-----------------------------------------------------------------------------------------------------------------------
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.Configure<PaymentSettings>(builder.Configuration.GetSection("PaymentSettings"));
+builder.Services.Configure<PaymentSettingsM>(builder.Configuration.GetSection("PaymentSettingsM"));
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

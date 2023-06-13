@@ -17,15 +17,17 @@ namespace Donations_App.Services
     public class PaymentService : IPaymentService
     {
         private readonly PaymentSettings _paymentSettings;
+        private readonly PaymentSettingsM _paymentSettingsM;
         private readonly ApplicationDbContext _context;
         private readonly ICartItemRepository _cartItemRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IPatientCaseRepository _patientCaseRepository;
         private readonly IMailingService _mailingService;
        
-        public PaymentService(IOptions<PaymentSettings> paymentSettings, ApplicationDbContext context , ICartItemRepository cartItemRepository , IOrderRepository orderRepository, IPatientCaseRepository patientCaseRepository , IMailingService mailingService) 
+        public PaymentService(IOptions<PaymentSettings> paymentSettings, IOptions<PaymentSettingsM> paymentSettingsM, ApplicationDbContext context , ICartItemRepository cartItemRepository , IOrderRepository orderRepository, IPatientCaseRepository patientCaseRepository , IMailingService mailingService) 
         {
             _paymentSettings = paymentSettings.Value;
+            _paymentSettingsM = paymentSettingsM.Value;
             _context  = context;
             _cartItemRepository = cartItemRepository;
             _orderRepository = orderRepository;
@@ -159,10 +161,130 @@ namespace Donations_App.Services
         }
 
         //-------------------------------------------------------------------------------------------------------------
+        //-------------------Mobile---------------------------------------------------------------------------------
 
-        
+        public async Task<IFramesOfPayment> CheckCreditMobile(int CartId)
+        {
+            var Api_key = _paymentSettingsM.Api_key;
+            var URLToken = _paymentSettingsM.URLToken;
+            var URLOrder = _paymentSettingsM.URLOrder;
+            var URLPayKey = _paymentSettingsM.URLPayKey;
+            int Integration_Id = _paymentSettingsM.Integration_Id;
 
-        
+            var cartItem = await _cartItemRepository.GetItems(CartId);
+            if (!cartItem.Items.Any())
+            {
+                return new IFramesOfPayment
+                {
+                    Message = "The Cart is empty !!",
+                    Success = false,
+                };
+            };
+            var cart = await _context.Carts.FindAsync(CartId);
+
+            double totalAmount = cartItem.Total * 100;
+
+            //----------------------------------------------------------------------------------------------
+
+            var AuthToken = await GetAuthToken(Api_key, URLToken);
+
+            var getOrderId = await SecodStep(AuthToken.token, totalAmount, URLOrder);
+
+            //--------------addNewOrder--------------------------------------------------------------------------
+
+            var order = new OrderDto
+            {
+                UserId = cart.UserId,
+                TotalAmount = cartItem.Total,
+                OrderDate = DateTime.Now,
+                OrderStatus = false,
+                CartId = CartId,
+                PaymentOrderId = getOrderId.id,
+            };
+            var addorder = await _orderRepository.CreateOrder(order);
+            if (!addorder.Success)
+            {
+                return new IFramesOfPayment
+                {
+                    Message = addorder.Message,
+                    Success = false,
+                };
+            };
+
+            //------------------------------------------------------------------------------------------------------
+            var thirdToken = await ThirdStep(AuthToken.token, getOrderId.id, totalAmount, URLPayKey, Integration_Id);
+            var PaymentToken = thirdToken.token;
+            var cardPayment = await CardPayment(PaymentToken);
+            return new IFramesOfPayment
+            {
+                Message = "Successfully",
+                Success = true,
+                iFramMasterCard = cardPayment.iFramMasterCard,
+                iFramVisa = cardPayment.iFramVisa,
+            };
+        }
+        public async Task<GeneralRetDto> PaymentCallbackMobile(ResponsePayment data)
+        {
+            var PaymentOrderId = data.obj.order.id;
+            var transactionId = data.obj.id;
+            var amount = data.obj.amount_cents;
+            var success = data.obj.success;
+            if (success)
+            {
+                // Payment is successful, update order status, send confirmation email, etc.
+                var orderInfo = await _orderRepository.GetByPaymentId(PaymentOrderId);
+                var order = await _orderRepository.UpdateOrderStatus(PaymentOrderId);
+                if (order.Success)
+                {
+                    //update paidAmount of PatientCase----------------------------------------------------------
+                    var increament = await _patientCaseRepository.IncreamentAmountPaid(orderInfo.CartId);
+                    if (increament.Success)
+                    {
+                        //*********** Send Mail To User **********************************
+                        string subject = "تأكيد تبرعك للحالات المرضي";
+                        string body = $"  تم التبرع بنجاح بمبلغ : {orderInfo.TotalAmount}" +
+                            $", شكرا لتبرعك لمعالجة المرضي والامراض المزمنة " +
+                            $" رزقك الله الصحة والعافية .";
+                        var user = await _context.Carts.Include(c => c.User).SingleOrDefaultAsync(d => d.Id == orderInfo.CartId);
+                        var sendMail = await _mailingService.SendEmailAsync(user.User.Email, subject, body);
+                        await _cartItemRepository.DeleteAll(user.Id);
+                        return new GeneralRetDto
+                        {
+                            Message = "Succssefully",
+                            Success = true,
+
+                        };
+
+                    }
+                    return new GeneralRetDto
+                    {
+                        Message = "Faild in update paidAmount",
+                        Success = false,
+                    };
+
+                }
+                return new GeneralRetDto
+                {
+                    Message = "Faild in update order status",
+                    Success = false,
+
+                };
+
+
+            }
+
+            // Payment is unsuccessful, update order status, send failure notification email, etc.
+
+            return new GeneralRetDto
+            {
+                Message = "payment faild",
+                Success = false,
+
+            };
+        }
+
+
+
 
         //-----------------------------------------------------------------------------------------------------------------------------------
         private async Task<authToken> GetAuthToken(string Api_key , string URL)

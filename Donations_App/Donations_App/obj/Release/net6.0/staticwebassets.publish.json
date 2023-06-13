@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "1YFCiY/M2DLldjnCQJ/pA09K06iiq0yv1ywcy18cyuk=",
+  "Hash": "7D5gHWCicmgEUw9MzjIuvUk7qiSRSj1r91g2+s4iIPM=",
   "Source": "Donations_App",
   "BasePath": "_content/Donations_App",
   "Mode": "Default",
@@ -68,6 +68,23 @@
       "OriginalItemSpec": "wwwroot\\PatientCaseImages\\finalclass.drawio (2).png"
     },
     {
+      "Identity": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\PatientCaseImages\\Milion.jpeg",
+      "SourceId": "Donations_App",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\",
+      "BasePath": "_content/Donations_App",
+      "RelativePath": "PatientCaseImages/Milion.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\PatientCaseImages\\Milion.jpeg"
+    },
+    {
       "Identity": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\RequestFilesID\\Milion.jpeg",
       "SourceId": "Donations_App",
       "SourceType": "Discovered",
@@ -100,6 +117,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\RequestFilesReport\\Milion.jpeg"
+    },
+    {
+      "Identity": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\Templates\\EmailTemplate.html",
+      "SourceId": "Donations_App",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Level 4\\GP\\Project\\Donations_App\\Donations_App\\wwwroot\\",
+      "BasePath": "_content/Donations_App",
+      "RelativePath": "Templates/EmailTemplate.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Templates\\EmailTemplate.html"
     }
   ]
 }

@@ -36,19 +36,19 @@ namespace Donations_App.Controllers
             return Ok(Cities);
         }
 
-        [HttpPost("AddCities")]
+        //[HttpPost("AddCities")]
 
-        public async Task<IActionResult> GetAll(GonDto dto)
-        {
-            var cat = new City
-            {
-                Name = dto.Name,
-                governorateId = dto.governorateId,  
+        //public async Task<IActionResult> GetAll(GonDto dto)
+        //{
+        //    var cat = new City
+        //    {
+        //        Name = dto.Name,
+        //        governorateId = dto.governorateId,  
 
-            };
-            await _context.Cities.AddAsync(cat);
-            _context.SaveChanges();
-            return Ok();
-        }
+        //    };
+        //    await _context.Cities.AddAsync(cat);
+        //    _context.SaveChanges();
+        //    return Ok();
+        //}
     }
 }

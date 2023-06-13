@@ -42,6 +42,7 @@
 
   <ItemGroup>
     <None Include="wwwroot\Images\Milion.jpeg" />
+    <None Include="wwwroot\Templates\EmailTemplate.html" />
   </ItemGroup>
 
 </Project>

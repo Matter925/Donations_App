@@ -3,7 +3,4 @@
   <parameter name="IIS Web Application Name" description="" value="donations636-001-site1" tags="IisApp">
     <parameterEntry kind="ProviderPath" scope="IisApp" match="^E:\\Level\ 4\\GP\\Project\\Donations_App\\Donations_App\\obj\\Release\\net6\.0\\PubTmp\\Out\\$" />
   </parameter>
-  <parameter name="Donations_App.Data.ApplicationDbContext" description="" value="Data Source=SQL8005.site4now.net;Initial Catalog=db_a9a058_donations636;User Id=db_a9a058_donations636_admin;Password=MatterMatter246810" tags="dbfullsql">
-    <parameterEntry kind="ProviderPath" scope="dbfullsql" match="^E:\\Level\ 4\\GP\\Project\\Donations_App\\Donations_App\\obj\\Release\\net6\.0\\PubTmp\\EFSQLScripts\\Donations_App\.Data\.ApplicationDbContext\.sql$" />
-  </parameter>
 </parameters>

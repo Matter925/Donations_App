@@ -4,16 +4,14 @@ namespace Donations_App.Repositories.FileUploadedServices
 {
     public class FileUploadedService : IFileUploadedService
     {
-        private readonly IHostingEnvironment _environment;
-        public FileUploadedService(IHostingEnvironment environment)
+        private readonly IWebHostEnvironment _environment;
+        public FileUploadedService(IWebHostEnvironment environment)
         {
             _environment = environment;
         }
         public async Task<string> UploadCategoryImagesAsync(IFormFile file )
         {
             string Pathcom = Path.Combine("//CategoryImages/", file.FileName);
-           // string HostUrl = "http://MBrother.somee.com";
-            //string HostUrl = "https://localhost:7038";
            string HostUrl = "http://donations636-001-site1.ctempurl.com"; 
             string PathImage = HostUrl + Pathcom;
 

@@ -8,5 +8,8 @@ namespace Donations_App.Services
         public  Task<IFramesOfPayment> CheckCredit(int CartId);
         
         public Task<GeneralRetDto> PaymentCallback(ResponsePayment data);
+        public Task<IFramesOfPayment> CheckCreditMobile(int CartId);
+
+        public Task<GeneralRetDto> PaymentCallbackMobile(ResponsePayment data);
     }
 }

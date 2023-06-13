@@ -40,12 +40,31 @@ namespace Donations_App.Controllers
             
             return Ok(result);
         }
+
+        [Authorize]
+        [HttpPost("Check-Credit-Mobile/{CartId}")]
+        public async Task<ActionResult> CheckCreditMobile(int CartId)
+        {
+            var framesOfPayment = await _payment.CheckCredit(CartId);
+            return Ok(framesOfPayment);
+
+        }
+
+        [HttpPost]
+        [Route("payment-callback-mobile")]
+        public async Task<IActionResult> PaymentCallbackMobile([FromBody] ResponsePayment data)
+        {
+
+            var result = await _payment.PaymentCallback(data);
+
+            return Ok(result);
+        }
         //[HttpGet]
         //[Route("payment-callback/{token}")]
         //public async Task<IActionResult> CallbackResponse(string token)
         //{
 
-            
+
 
         //    return Ok(success);
         //}

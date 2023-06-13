@@ -8,6 +8,7 @@ namespace Donations_App.Repositories.PatientCaseServices
     {
         Task<CaseResponse> GetAllPatientsCases(int page , int limit);
         Task<CaseResponse> CompletedPatientsCases(int page, int limit);
+      
         Task<IEnumerable<PatientCase>> GetByCategoryId(int categoryId);
         Task<PatientCase> GetPatientCaseByID(int id);
         Task<GeneralRetDto> CreatePatientCase(PatientCaseDto Dto);
@@ -18,5 +19,7 @@ namespace Donations_App.Repositories.PatientCaseServices
         Task<CaseResponse> GetUserPatientCases(string UserId , int page, int limit);
         Task<CaseResponse> Search(string query , int page, int limit);
         Task<CaseResponse> Filter(FilterDto dto, int page, int limit);
+        Task<CaseResponse> QuickPatientsCases (int page, int limit);
+        Task<CaseResponse> ExpirePatientsCases (int page, int limit);
     }
 }

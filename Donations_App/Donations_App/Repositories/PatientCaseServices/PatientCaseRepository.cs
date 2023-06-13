@@ -20,9 +20,12 @@ namespace Donations_App.Repositories.PatientCaseServices
 
         public async Task<CaseResponse> GetAllPatientsCases(int page  , int limit)
         {
-            var AllCases = await _context.PatientsCases.OrderBy(o => o.Name).Include(m => m.Category).ToListAsync();
-           if(AllCases != null)
+            var dateTody= DateTime.Today; 
+           
+            var AllCases = await _context.PatientsCases.OrderBy(o => o.Name).Include(m => m.Category).Where(c => c.IsComplete != true && c.PatientCaseDate.AddDays(c.LimitTime).CompareTo(dateTody) > 0 && c.Rate != 1).ToListAsync();
+            if (AllCases != null)
             {
+                
                 foreach (var item in AllCases)
                 {
                     if (item.AmountPaid == item.Amount)
@@ -33,10 +36,9 @@ namespace Donations_App.Repositories.PatientCaseServices
                     }
                 }
             }
-
+           
             if (page == 1 && limit ==0)
             {
-                 AllCases = await _context.PatientsCases.OrderBy(o => o.Name).Include(m => m.Category).Where(c => c.IsComplete != true).ToListAsync();
                 return new CaseResponse
                 {
                     patientCases = AllCases,
@@ -46,13 +48,12 @@ namespace Donations_App.Repositories.PatientCaseServices
 
                 };
             }
-            var Patients= await _context.PatientsCases.Where(c => c.IsComplete != true).ToListAsync();
+            var Patients = AllCases;
             var pageResult = limit * (1f);
             var pageCount =Math.Ceiling(Patients.Count() / pageResult);
             
-            var cases = await _context.PatientsCases
-            .OrderBy(o => o.Name).Include(m => m.Category).Where(c => c.IsComplete != true).Skip((page - 1) * (int)pageResult)
-            .Take((int)pageResult).ToListAsync();
+            var cases = AllCases.Skip((page - 1) * (int)pageResult)
+            .Take((int)pageResult);
             return new CaseResponse
             {
                 patientCases = cases,
@@ -197,18 +198,6 @@ namespace Donations_App.Repositories.PatientCaseServices
         public async Task<CaseResponse> CompletedPatientsCases(int page, int limit)
         {
             var AllCases = await _context.PatientsCases.OrderBy(o => o.Name).Include(m => m.Category).ToListAsync();
-            if (AllCases != null)
-            {
-                foreach (var item in AllCases)
-                {
-                    if (item.AmountPaid == item.Amount)
-                    {
-                        item.IsComplete = true;
-                        _context.PatientsCases.Update(item);
-                        await _context.SaveChangesAsync();
-                    }
-                }
-            }
 
             if (page == 1 && limit == 0)
             {
@@ -272,6 +261,39 @@ namespace Donations_App.Repositories.PatientCaseServices
                 };
           }
 
+        public async Task<CaseResponse> QuickPatientsCases(int page, int limit)
+        {
+            var dateTody = DateTime.Today;
+            var AllCases = await _context.PatientsCases.OrderBy(o => o.Name).Include(m => m.Category).Where(c => c.Rate == 1 && c.PatientCaseDate.AddDays(c.LimitTime).CompareTo(dateTody) > 0).ToListAsync();
+            if (page == 1 && limit == 0)
+            {
+                
+                return new CaseResponse
+                {
+                    patientCases = AllCases,
+                    Pages = page,
+                    CurrentPage = page,
+                    Count = AllCases.Count()
+
+                };
+            }
+            var Patients = AllCases;
+            var pageResult = limit * (1f);
+            var pageCount = Math.Ceiling(Patients.Count() / pageResult);
+
+            var cases = AllCases.Skip((page - 1) * (int)pageResult)
+            .Take((int)pageResult);
+            return new CaseResponse
+            {
+                patientCases = cases,
+                CurrentPage = page,
+                Pages = (int)pageCount,
+                Count = Patients.Count()
+            };
+
+
+
+        }
         public async Task<CaseResponse> Filter(FilterDto dto , int page, int limit)
         {
             var results = _context.PatientsCases.OrderBy(o => o.Name).Include(m => m.Category).ToList();
@@ -346,6 +368,39 @@ namespace Donations_App.Repositories.PatientCaseServices
             };
         }
 
+        public async Task<CaseResponse> ExpirePatientsCases(int page, int limit)
+        {
+            var dateTody = DateTime.Today;
+
+            var AllCases = await _context.PatientsCases.OrderBy(o => o.Name).Include(m => m.Category).Where(c => c.PatientCaseDate.AddDays(c.LimitTime).CompareTo(dateTody) <= 0).ToListAsync();
+            if (page == 1 && limit == 0)
+            {
+                
+                return new CaseResponse
+                {
+                    patientCases = AllCases,
+                    Pages = page,
+                    CurrentPage = page,
+                    Count = AllCases.Count()
+
+                };
+            }
+            var Patients = AllCases;
+            var pageResult = limit * (1f);
+            var pageCount = Math.Ceiling(Patients.Count() / pageResult);
+
+            var cases = AllCases.Skip((page - 1) * (int)pageResult)
+            .Take((int)pageResult);
+            return new CaseResponse
+            {
+                patientCases = cases,
+                CurrentPage = page,
+                Pages = (int)pageCount,
+                Count = Patients.Count()
+            };
+
+
+        }
 
         //public async Task<IEnumerable<PatientCase>> Search(string text)
         //{

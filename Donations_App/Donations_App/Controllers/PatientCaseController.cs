@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Donations_App.Controllers
 {
     [Route("api/[controller]")]
-   [Authorize]
+   //[Authorize]
     [ApiController]
     
     public class PatientCaseController : ControllerBase
@@ -32,6 +32,22 @@ namespace Donations_App.Controllers
         public async Task<IActionResult> CompletedPatientsCases(int page = 1, int limit = 0)
         {
             var Cases = await _patientCaseRepository.CompletedPatientsCases(page , limit);
+            return Ok(Cases);
+        }
+        [HttpGet("Quick_Cases/{page}/{limit}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> QuickPatientsCases(int page = 1, int limit = 0)
+        {
+            var Cases = await _patientCaseRepository.QuickPatientsCases(page, limit);
+            return Ok(Cases);
+        }
+
+       [Authorize(Roles = "Admin")]
+        [HttpGet("Expire_Cases/{page}/{limit}")]
+        
+        public async Task<IActionResult> ExpirePatientsCases(int page = 1, int limit = 0)
+        {
+            var Cases = await _patientCaseRepository.ExpirePatientsCases(page, limit);
             return Ok(Cases);
         }
         [HttpGet("GetPatientCaseByID/{id}")]

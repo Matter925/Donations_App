@@ -39,7 +39,7 @@ namespace DonationsApp.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("DonationsApp.Models.VerifyCode", b =>
@@ -62,7 +62,7 @@ namespace DonationsApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("VerifyCodes");
+                    b.ToTable("VerifyCodes", (string)null);
                 });
 
             modelBuilder.Entity("Donations_App.Models.ApplicationUser", b =>
@@ -162,7 +162,7 @@ namespace DonationsApp.Migrations
 
                     b.HasIndex("PatientCaseId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("Donations_App.Models.Category", b =>
@@ -189,7 +189,7 @@ namespace DonationsApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Donations_App.Models.City", b =>
@@ -211,7 +211,7 @@ namespace DonationsApp.Migrations
 
                     b.HasIndex("governorateId");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("Donations_App.Models.Governorate", b =>
@@ -228,7 +228,7 @@ namespace DonationsApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Governorates");
+                    b.ToTable("Governorates", (string)null);
                 });
 
             modelBuilder.Entity("Donations_App.Models.Order", b =>
@@ -262,7 +262,7 @@ namespace DonationsApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Donations_App.Models.OrderItem", b =>
@@ -288,7 +288,7 @@ namespace DonationsApp.Migrations
 
                     b.HasIndex("PatientCaseId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("Donations_App.Models.PatientCase", b =>
@@ -348,7 +348,7 @@ namespace DonationsApp.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("PatientsCases");
+                    b.ToTable("PatientsCases", (string)null);
                 });
 
             modelBuilder.Entity("Donations_App.Models.Request", b =>
@@ -398,7 +398,7 @@ namespace DonationsApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Requests");
+                    b.ToTable("Requests", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -558,7 +558,7 @@ namespace DonationsApp.Migrations
 
             modelBuilder.Entity("Donations_App.Models.ApplicationUser", b =>
                 {
-                    b.OwnsMany("Donations_App.Models.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("Donations_App.Models.ApplicationUser.RefreshTokens#Donations_App.Models.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("ApplicationUserId")
                                 .HasColumnType("nvarchar(450)");
@@ -584,7 +584,7 @@ namespace DonationsApp.Migrations
 
                             b1.HasKey("ApplicationUserId", "Id");
 
-                            b1.ToTable("RefreshToken");
+                            b1.ToTable("RefreshToken", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ApplicationUserId");

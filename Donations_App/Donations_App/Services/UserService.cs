@@ -31,7 +31,8 @@ namespace Donations_App.Services
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
         private readonly IMailingService _mailingService;
-        public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<JWT> jwt, IConfiguration configuration , ApplicationDbContext context , IMailingService mailingService)
+        private readonly IWebHostEnvironment _environment;
+        public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<JWT> jwt, IConfiguration configuration , ApplicationDbContext context , IMailingService mailingService ,IWebHostEnvironment environment)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -39,6 +40,7 @@ namespace Donations_App.Services
             _configuration = configuration;
             _context = context;
             _mailingService = mailingService;
+            _environment = environment;
         }
 
         
@@ -127,12 +129,12 @@ namespace Donations_App.Services
 
             // ---------------------Send Welcome Mail To User------------------------------------------------------
 
-            //var filePath = $"{Directory.GetCurrentDirectory()}\\Templates\\EmailTemplate.html";
-            //var str = new StreamReader(filePath);
-            //var mailBody = str.ReadToEnd();
-            //str.Close();
-            //mailBody = mailBody.Replace("[username]", user.FullName).Replace("[email]", user.Email);
-            var Sendmail = await _mailingService.SendEmailAsync(user.Email, "Welcome to our website ", "Welcom");
+            var filePath = _environment.WebRootPath + "\\Templates\\EmailTemplate.html";
+            var str = new StreamReader(filePath);
+            var mailBody = str.ReadToEnd();
+            str.Close();
+            mailBody = mailBody.Replace("[username]", user.FullName).Replace("[email]", user.Email);
+            var Sendmail = await _mailingService.SendEmailAsync(user.Email, "Welcome to our website ", mailBody);
             //----------------------------------------------------------------------------------------------------------------
             if (Sendmail.Success)
             {
